@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.Member;
 import toyproject.board.domain.MemberDto;
+import toyproject.board.domain.Post;
 import toyproject.board.service.MemberService;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -59,7 +62,9 @@ public class MemberController {
     public String home(@PathVariable Long id, Model model) {
 
         Member member = memberService.findById(id);
+        List<Post> posts = member.getPosts();
         model.addAttribute("member", member);
+        model.addAttribute("posts", posts);
         return "home";
     }
 }

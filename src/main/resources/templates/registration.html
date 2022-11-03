@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>글 등록하기</h2>
+<form th:action="@{/home/{id}/registration(id=${member.id})}" th:method="post">
+    <label for="title">글 제목</label>
+    <input type="text" name="title" id="title" placeholder="글 제목을 입력하세요">
+    <label for="body">글 내용</label>
+    <input type="text" name="body" id="body" placeholder="글 내용을 입력하세요">
+    <button type="submit">등록하기</button>
+</form>
+</body>
+</html>
