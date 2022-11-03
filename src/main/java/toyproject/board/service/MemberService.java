@@ -15,10 +15,23 @@ public class MemberService {
 
     public Member signup(Member member) {
 
+        validateDuplicateMember(member);
+
         Member saveMember = memberRepository.save(member);
         return saveMember;
     }
 
+    private void validateDuplicateMember(Member member) {
+        memberRepository.findByUsername(member.getUsername())
+                .ifPresent(m -> {
+                    throw new IllegalStateException("이미 존재하는 회원입니다");
+                });
+    }
+
+    public Member findByUsername(String username) {
+        Member member = memberRepository.findByUsername(username).get();
+        return member;
+    }
 
     public Member findById(Long id) {
         Member member = memberRepository.findById(id).get();

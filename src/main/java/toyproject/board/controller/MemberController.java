@@ -1,16 +1,17 @@
 package toyproject.board.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.Member;
 import toyproject.board.domain.MemberDto;
 import toyproject.board.service.MemberService;
 
-@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class MemberController {
@@ -27,7 +28,6 @@ public class MemberController {
     @PostMapping("/signup")
     public String join(@ModelAttribute MemberDto memberDto) {
 
-        log.info("username={}", memberDto.getUsername());
         Member member = Member.builder()
                 .username(memberDto.getUsername())
                 .password(memberDto.getPassword())
@@ -35,5 +35,31 @@ public class MemberController {
 
         memberService.signup(member);
         return "redirect:/";
+    }
+
+    @GetMapping("/login")
+    public String loginForm() {
+        return "/login";
+    }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute MemberDto memberDto, RedirectAttributes redirectAttributes) {
+        Member findMember = memberService.findByUsername(memberDto.getUsername());
+
+        if (findMember.getPassword().equals(memberDto.getPassword())) {
+            Long id = findMember.getId();
+            redirectAttributes.addAttribute("id", id);
+            return "redirect:/home/{id}";
+        } else {
+            return "redirect:/";
+        }
+    }
+
+    @GetMapping("/home/{id}")
+    public String home(@PathVariable Long id, Model model) {
+
+        Member member = memberService.findById(id);
+        model.addAttribute("member", member);
+        return "home";
     }
 }
