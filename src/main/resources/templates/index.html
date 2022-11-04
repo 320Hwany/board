@@ -6,7 +6,8 @@
 </head>
 <body>
 <h2>Welcome Page</h2>
-<a href="http://localhost:8080/signup">회원 가입</a>
-<a href="http://localhost:8080/login">로그인 하기</a>
+<h2 th:if="${param.status}" th:text="'회원 가입이 되었습니다'"></h2>
+<a th:href="@{/signup}">회원 가입</a>
+<a th:href="@{/login}">로그인 하기</a>
 </body>
 </html>

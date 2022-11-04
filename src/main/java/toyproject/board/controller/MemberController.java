@@ -29,7 +29,7 @@ public class MemberController {
     // @ModelAttribute 는 @Setter 있어야 한다!!!
     // Member 가 @Id 있기 때문에 Dto 만들어서 builder
     @PostMapping("/signup")
-    public String join(@ModelAttribute MemberDto memberDto) {
+    public String join(@ModelAttribute MemberDto memberDto, RedirectAttributes redirectAttributes) {
 
         Member member = Member.builder()
                 .username(memberDto.getUsername())
@@ -37,6 +37,7 @@ public class MemberController {
                 .build();
 
         memberService.signup(member);
+        redirectAttributes.addAttribute("status", true);
         return "redirect:/";
     }
 
