@@ -12,6 +12,8 @@ import toyproject.board.domain.PostDto;
 import toyproject.board.service.MemberService;
 import toyproject.board.service.PostService;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/home")
 @RequiredArgsConstructor
@@ -45,5 +47,12 @@ public class PostController {
         redirectAttributes.addAttribute("status", true);
 
         return "redirect:/home/{id}";
+    }
+
+    @GetMapping("/postList")
+    public String postList(Model model) {
+        List<Post> posts = postService.findAll();
+        model.addAttribute("posts", posts);
+        return "postList";
     }
 }

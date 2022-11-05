@@ -10,8 +10,9 @@
   <tbody>
   <tr th:each="post : ${posts}">
       <li>
-          <td th:text="${post.title}"></td>
-          <td th:text="${post.body}"></td>
+          <td th:text="|${postStat.count}번 글 : |"></td>
+          <td th:text="|title : ${post.title} |"></td>
+          <td th:text="|body : ${post.body} |"></td>
       </li>
   </tr>
   </tbody>

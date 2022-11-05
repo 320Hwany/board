@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import toyproject.board.domain.Post;
 import toyproject.board.repository.PostRepository;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class PostService {
@@ -14,5 +16,10 @@ public class PostService {
     public Post save(Post post) {
         postRepository.save(post);
         return post;
+    }
+
+    public List<Post> findAll() {
+        List<Post> posts = postRepository.findAll();
+        return posts;
     }
 }
