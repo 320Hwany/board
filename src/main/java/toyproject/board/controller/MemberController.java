@@ -1,6 +1,7 @@
 package toyproject.board.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import toyproject.board.service.MemberService;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class MemberController {
@@ -67,5 +69,28 @@ public class MemberController {
         model.addAttribute("member", member);
         model.addAttribute("posts", posts);
         return "home";
+    }
+
+    @GetMapping("/deleteMember/{id}")
+    public String DeleteForm(@PathVariable Long id, Model model) {
+        Member member = memberService.findById(id);
+        model.addAttribute("member", member);
+        return "MemberDelete";
+    }
+
+    @PostMapping("/deleteMember/{id}") // form method post 설정안함
+    public String DeleteMember(@PathVariable Long id, @ModelAttribute MemberDto memberDto,
+                               RedirectAttributes redirectAttributes) {
+        Member member = memberService.findById(id);
+
+        // String == 비교 말고 equals 사용해야함
+        if (member.getUsername().equals(memberDto.getUsername()) &&
+        member.getPassword().equals(memberDto.getPassword())) {
+            redirectAttributes.addAttribute("statusDeleteMember", true);
+            memberService.deleteMember(member);
+            return "redirect:/";
+        }
+        redirectAttributes.addAttribute("statusDeleteFail", true);
+        return "redirect:/deleteMember/{id}";
     }
 }

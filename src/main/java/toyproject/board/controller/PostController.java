@@ -44,7 +44,7 @@ public class PostController {
         Post post = postService.save(savePost);
 
         redirectAttributes.addAttribute("id", id);
-        redirectAttributes.addAttribute("status", true);
+        redirectAttributes.addAttribute("statusRegistration", true);
 
         return "redirect:/home/{id}";
     }

@@ -39,4 +39,8 @@ public class MemberService {
         Member member = memberRepository.findById(id).get();
         return member;
     }
+
+    public void deleteMember(Member member) {
+        memberRepository.delete(member);
+    }
 }

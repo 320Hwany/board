@@ -6,7 +6,7 @@
 </head>
 <body>
   <h2 th:text="|${member.username}의 게시판입니다.|"></h2>
-  <h3 th:if="${param.status}" th:text="'게시글이 추가되었습니다'"></h3>
+  <h3 th:if="${param.statusRegistration}" th:text="'게시글이 추가되었습니다'"></h3>
   <tbody>
   <tr th:each="post : ${posts}">
       <li>
@@ -17,5 +17,6 @@
   </tr>
   </tbody>
     <a th:href="@{/home/{id}/registration(id=${member.id})}">글 등록하기</a>
+    <a th:href="@{/deleteMember/{id}(id=${member.id})}">회원 삭제하기</a>
 </body>
 </html>
