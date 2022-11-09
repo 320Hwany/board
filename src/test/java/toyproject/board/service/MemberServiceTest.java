@@ -17,11 +17,12 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class MemberServiceTest {
 
+    // 실패 테스트도 만들기
     @Autowired
     private MemberService memberService;
 
     @Test
-    public void 회원가입() {
+    public void 회원가입_성공() {
         //given
         Post post1 = new Post();
         Post post2 = new Post();
@@ -68,7 +69,7 @@ class MemberServiceTest {
         Member member = new Member("userA", "1234", posts1);
         //when
         memberService.signup(member);
-        Member findMemberByUsername = memberService.findByUsername("userA");
+        Member findMemberByUsername = memberService.findByUsername("userA").get();
         //then
         assertThat(member).isEqualTo(findMemberByUsername);
         assertThat(member.getId()).isEqualTo(findMemberByUsername.getId());
@@ -95,5 +96,4 @@ class MemberServiceTest {
         assertThat(member.getPassword()).isEqualTo(findMemberById.getPassword());
         assertThat(member.getPosts()).isEqualTo(findMemberById.getPosts());
     }
-
 }

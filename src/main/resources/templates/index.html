@@ -8,6 +8,7 @@
 <h2>Welcome Page</h2>
 <h2 th:if="${param.status}" th:text="'회원 가입이 되었습니다'"></h2>
 <h2 th:if="${param.statusDeleteMember}" th:text="'회원 탈퇴가 되었습니다'"></h2>
+<h2 th:if="${param.statusUpdateMember}" th:text="'회원 정보가 수정되었습니다.'"></h2>
 <a th:href="@{/signup}">회원 가입</a>
 <a th:href="@{/login}">로그인 하기</a>
 <a th:href="@{/home/postList}">전체 글 보기</a>

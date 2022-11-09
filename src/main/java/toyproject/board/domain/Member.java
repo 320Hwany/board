@@ -28,4 +28,10 @@ public class Member {
         this.password = password;
         this.posts = posts;
     }
+
+    public Member updateMember(String username, String password) {
+        this.username = username;
+        this.password = password;
+        return this;
+    }
 }

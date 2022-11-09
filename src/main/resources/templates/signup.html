@@ -12,6 +12,7 @@
     <label for="password">비밀번호</label>
     <input type="password" name="password" id="password" placeholder="비밀번호를 입력하세요">
     <button type="submit">등록</button>
+    <h2 th:if="${param.statusSignup}" th:text="'이미 존재하는 회원입니다'"></h2>
 </form>
 </body>
 </html>
