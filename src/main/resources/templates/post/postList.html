@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
     <tr th:each="post : ${posts}">
@@ -13,5 +14,13 @@
         <td th:text="|body : ${post.body}|"></td>
         <br>
     </tr>
+    <h2>게시글 검색</h2>
+<form th:action="@{/home/findPosts}" th:method="post">
+    <label for="title">게시글 제목</label>
+    <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
+    <button type="submit">검색</button>
+</form>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 </body>
 </html>

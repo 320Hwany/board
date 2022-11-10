@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+<tr th:each="post : ${posts}">
+    <td th:text="${postStat.count}"></td>
+    <td th:text="|작성자 : ${post.member.username} |"></td>
+    <td th:text="|제목 : ${post.title} |"></td>
+    <td th:text="|내용 : ${post.body} |"></td>
+    <br>
+</tr>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+</body>
+</html>

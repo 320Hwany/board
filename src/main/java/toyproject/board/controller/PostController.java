@@ -55,4 +55,11 @@ public class PostController {
         model.addAttribute("posts", posts);
         return "post/postList";
     }
+
+    @PostMapping("/findPosts")
+    public String findPost(@RequestParam String title, Model model) {
+        List<Post> posts = postService.findByTitle(title);
+        model.addAttribute("posts", posts);
+        return "post/findPosts";
+    }
 }

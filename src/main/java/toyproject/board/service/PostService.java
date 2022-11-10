@@ -22,4 +22,9 @@ public class PostService {
         List<Post> posts = postRepository.findAll();
         return posts;
     }
+
+    public List<Post> findByTitle(String title) {
+        List<Post> posts = postRepository.findByTitle(title);
+        return posts;
+    }
 }
