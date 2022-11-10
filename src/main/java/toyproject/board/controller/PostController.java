@@ -27,7 +27,7 @@ public class PostController {
     public String registrationForm(@PathVariable Long id, Model model) {
         Member member = memberService.findById(id);
         model.addAttribute("member", member);
-        return "registration";
+        return "post/registration";
     }
 
     @PostMapping("/{id}/registration")
@@ -53,6 +53,6 @@ public class PostController {
     public String postList(Model model) {
         List<Post> posts = postService.findAll();
         model.addAttribute("posts", posts);
-        return "postList";
+        return "post/postList";
     }
 }
