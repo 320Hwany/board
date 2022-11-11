@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -8,11 +8,11 @@
 <body>
 <h2>글 등록하기</h2>
 <form th:action="@{/home/{id}/registration(id=${member.id})}" th:method="post">
-    <label for="title">글 제목</label>
+    <label for="title" th:text="#{label.post.title}">게시글 제목</label>
     <input type="text" name="title" id="title" placeholder="글 제목을 입력하세요">
-    <label for="body">글 내용</label>
+    <label for="body" th:text="#{label.post.body}">글 내용</label>
     <input type="text" name="body" id="body" placeholder="글 내용을 입력하세요">
-    <button type="submit">등록하기</button>
+    <button type="submit" th:text="#{button.post.save}">등록하기</button>
 </form>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>

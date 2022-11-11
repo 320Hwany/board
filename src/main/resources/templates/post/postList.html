@@ -16,9 +16,9 @@
     </tr>
     <h2>게시글 검색</h2>
 <form th:action="@{/home/findPosts}" th:method="post">
-    <label for="title">게시글 제목</label>
+    <label for="title" th:text="#{label.post.title}">게시글 제목</label>
     <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
-    <button type="submit">검색</button>
+    <button type="submit" th:text="#{button.post.search}">검색</button>
 </form>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap.min.js"></script>
