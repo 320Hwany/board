@@ -1,7 +1,25 @@
-## board  
+## CRUD 게시판 만들기
 
 회원가입, 로그인 페이지를 구현하고 각 회원마다 게시글을 등록할 수 있다. 각 회원은 정보를 수정하거나 탈퇴할 수 있고 동일한 아이디로는 가입할 수 없다.  
 모든 게시글 보기를 하면 모든 회원이 작성한 게시글이 나오며 몇번째 글이고 작성자가 누구인지 확인할 수 있다.
+
+## API 설계  
+
+|기능|URL|Method|                      
+|---|---|---|                                               
+|회원 가입 폼| /signup| Get|            
+|회원 가입 | /signup| Post| 
+|로그인 폼| /login| Get|
+|로그인|/login|Post|
+|홈 화면|/home/{id}|Get|
+|회원 삭제 폼|/deleteMember/{id}|Get|
+|회원 삭제|/deleteMember/{id}|Post|
+|회원 수정 폼|/updateMember/{id}|Get|
+|회원 수정|/updateMember/{id}|Post|
+|게시글 등록 폼|/home/{id}/registration|Get|
+|게시글 등록|/home/{id}/registration|Post|
+|전체 게시글 보기|/home/postList|Get|
+|검색 게시글 찾기|/home/findPosts|Post|
 
 ## 개발환경 
 
