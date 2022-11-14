@@ -56,10 +56,23 @@ public class PostController {
         return "post/postList";
     }
 
+    @GetMapping("/findPosts")
+    public String findPostsForm() {
+        return "post/findPosts";
+    }
+
     @PostMapping("/findPosts")
-    public String findPost(@RequestParam String title, Model model) {
+    public String findPost(@RequestParam String title, Model model,
+                           RedirectAttributes redirectAttributes) {
         List<Post> posts = postService.findByTitle(title);
+
+        if (posts.size() == 0) {
+            redirectAttributes.addAttribute("statusNoList", true);
+            return "redirect:/home/findPosts";
+        }
+        // redirectAttributes 는 redirect:/ 를 return 할 때 사용
         model.addAttribute("posts", posts);
+
         return "post/findPosts";
     }
 }
