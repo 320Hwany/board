@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.Member;
 import toyproject.board.domain.Post;
-import toyproject.board.domain.PostDto;
+import toyproject.board.dto.post.PostDto;
 import toyproject.board.service.MemberService;
 import toyproject.board.service.PostService;
 

@@ -8,6 +8,7 @@
 <body>
 <h2>회원가입</h2>
 <form th:action="@{/signup}" th:object="${memberSignupDto}" th:method="post">
+
     <div>
     <label for="email" th:text="#{label.member.email}">이메일</label>
     <input type="email" id="email" th:field="*{email}" placeholder="이메일을 입력하세요">

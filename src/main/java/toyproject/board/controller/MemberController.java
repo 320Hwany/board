@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.*;
+import toyproject.board.dto.member.*;
 import toyproject.board.service.MemberService;
 import toyproject.board.service.PostService;
 
@@ -74,6 +75,7 @@ public class MemberController {
             redirectAttributes.addAttribute("id", id);
             return "redirect:/home/{id}";
         } else {
+            redirectAttributes.addAttribute("statusLoginFail", true);
             return "redirect:/";
         }
     }
@@ -92,21 +94,24 @@ public class MemberController {
     public String deleteForm(@PathVariable Long id, Model model) {
         Member member = memberService.findById(id);
         model.addAttribute("member", member);
+        model.addAttribute("memberDeleteDto", new MemberDeleteDto());
         return "member/deleteMember";
     }
 
     @PostMapping("/deleteMember/{id}") // form method post 설정안함
-    public String deleteMember(@PathVariable Long id, @ModelAttribute MemberDto memberDto,
+    public String deleteMember(@PathVariable Long id, @ModelAttribute MemberDeleteDto memberDeleteDto,
+                               BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
         Member member = memberService.findById(id);
 
         // String == 비교 말고 equals 사용해야함. String 은 불변 객체
-        if (member.getUsername().equals(memberDto.getUsername()) &&
-                member.getPassword().equals(memberDto.getPassword())) {
+        if (member.getPassword().equals(memberDeleteDto.getPassword()) &&
+        member.getPassword().equals(memberDeleteDto.getPasswordCheck())) {
             redirectAttributes.addAttribute("statusDeleteMember", true);
             memberService.deleteMember(member);
             return "redirect:/";
         }
+
         redirectAttributes.addAttribute("statusDeleteFail", true);
         return "redirect:/deleteMember/{id}";
     }
@@ -119,11 +124,16 @@ public class MemberController {
     }
 
     @PostMapping("/updateMember/{id}")
-    public String updateMember(@PathVariable Long id, @ModelAttribute MemberDto memberDto,
+    public String updateMember(@PathVariable Long id, @Validated @ModelAttribute MemberUpdateDto memberUpdateDto,
+                               BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
 
+        if (bindingResult.hasErrors()) {
+            return "member/updateMember";
+        }
+
         Member member = memberService.findById(id);
-        member.updateMember(memberDto.getUsername(), memberDto.getPassword());
+        member.updateMember(memberUpdateDto.getUsername(), memberUpdateDto.getPassword());
 
         memberService.signup(member);
         redirectAttributes.addAttribute("statusUpdateMember", true);

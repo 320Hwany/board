@@ -1,4 +1,4 @@
-package toyproject.board.domain;
+package toyproject.board.dto.post;
 
 import lombok.Getter;
 import lombok.Setter;
