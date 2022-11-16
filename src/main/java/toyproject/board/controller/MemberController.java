@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import toyproject.board.domain.Member;
-import toyproject.board.domain.MemberDto;
-import toyproject.board.domain.Post;
+import toyproject.board.domain.*;
 import toyproject.board.service.MemberService;
 import toyproject.board.service.PostService;
 
@@ -24,21 +24,27 @@ public class MemberController {
     private final PostService postService;
 
     @GetMapping("/signup")
-    public String signup() {
+    public String signup(Model model) {
+        model.addAttribute("memberSignupDto", new MemberSignupDto());
         return "member/signup";
     }
 
     // @ModelAttribute 는 @Setter 있어야 한다!!!
     // Member 가 @Id 있기 때문에 Dto 만들어서 builder
     @PostMapping("/signup")
-    public String join(@ModelAttribute MemberDto memberDto, RedirectAttributes redirectAttributes) {
+    public String join(@Validated @ModelAttribute MemberSignupDto memberSignupDto, BindingResult bindingResult,
+                       RedirectAttributes redirectAttributes) {
 
+        if (bindingResult.hasErrors()) {
+            return "member/signup";
+        }
         Member member = Member.builder()
-                .username(memberDto.getUsername())
-                .password(memberDto.getPassword())
+                .email(memberSignupDto.getEmail())
+                .username(memberSignupDto.getUsername())
+                .password(memberSignupDto.getPassword())
                 .build();
 
-        Optional<Member> findMember = memberService.findByUsername(memberDto.getUsername());
+        Optional<Member> findMember = memberService.findByUsername(memberSignupDto.getUsername());
         if (findMember.isEmpty()) {
             memberService.signup(member);
         } else {
@@ -50,15 +56,20 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(Model model) {
+        model.addAttribute("memberLoginDto", new MemberLoginDto());
         return "/member/login";
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute MemberDto memberDto, RedirectAttributes redirectAttributes) {
-        Member findMember = memberService.findByUsername(memberDto.getUsername()).get();
+    public String login(@Validated @ModelAttribute MemberLoginDto memberLoginDto, BindingResult bindingResult,
+                        RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "/member/login";
+        }
+        Member findMember = memberService.findByUsername(memberLoginDto.getUsername()).get();
 
-        if (findMember.getPassword().equals(memberDto.getPassword())) {
+        if (findMember.getPassword().equals(memberLoginDto.getPassword())) {
             Long id = findMember.getId();
             redirectAttributes.addAttribute("id", id);
             return "redirect:/home/{id}";

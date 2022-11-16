@@ -16,6 +16,7 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
+    private String email;
     private String username;
     private String password;
 
@@ -23,7 +24,8 @@ public class Member {
     private List<Post> posts;
 
     @Builder
-    public Member(String username, String password, List<Post> posts) {
+    public Member(String email, String username, String password, List<Post> posts) {
+        this.email = email;
         this.username = username;
         this.password = password;
         this.posts = posts;

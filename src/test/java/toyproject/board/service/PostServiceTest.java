@@ -29,7 +29,7 @@ class PostServiceTest {
         List<Post> posts = new ArrayList<>();
         posts.add(post);
 
-        Member member = new Member("userA", "1234", posts);
+        Member member = new Member("yhwjd@naver.com","userA", "1234", posts);
         //when
         memberService.signup(member);
         post.setMember(member);

@@ -56,6 +56,7 @@ public class PostController {
         return "post/postList";
     }
 
+    // redirect 다시 해보기
     @GetMapping("/findPosts")
     public String findPostsForm() {
         return "post/findPosts";

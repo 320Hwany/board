@@ -31,32 +31,12 @@ class MemberServiceTest {
         posts.add(post1);
         posts.add(post2);
 
-        Member member = new Member("userA", "1234", posts);
+        Member member = new Member("yhwjd@naver.com","userA", "1234", posts);
         //when
         Member savedMember = memberService.signup(member);
         //then
         assertThat(member).isEqualTo(savedMember);
         assertThat(member.getPosts().size()).isEqualTo(2);
-    }
-
-    @Test
-    public void 중복회원검증() {
-        //given
-        Post post1 = new Post();
-        Post post2 = new Post();
-
-        List<Post> posts1 = new ArrayList<>();
-        List<Post> posts2 = new ArrayList<>();
-        posts1.add(post1);
-        posts2.add(post2);
-
-        Member memberA = new Member("userA", "1234", posts1);
-        Member memberB = new Member("userA", "123456", posts2);
-        //when
-        memberService.signup(memberA);
-        //then
-        assertThrows(IllegalStateException.class,
-                () -> memberService.signup(memberB));
     }
 
     @Test
@@ -66,7 +46,7 @@ class MemberServiceTest {
         List<Post> posts1 = new ArrayList<>();
         posts1.add(post1);
 
-        Member member = new Member("userA", "1234", posts1);
+        Member member = new Member("yhwjd@naver.com","userA", "1234", posts1);
         //when
         memberService.signup(member);
         Member findMemberByUsername = memberService.findByUsername("userA").get();
@@ -85,7 +65,7 @@ class MemberServiceTest {
         List<Post> posts1 = new ArrayList<>();
         posts1.add(post1);
 
-        Member member = new Member("userA", "1234", posts1);
+        Member member = new Member("yhwjd@naver.com","userA", "1234", posts1);
         //when
         memberService.signup(member);
         Member findMemberById = memberService.findById(member.getId());

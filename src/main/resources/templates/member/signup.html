@@ -7,11 +7,25 @@
 </head>
 <body>
 <h2>회원가입</h2>
-<form th:action="@{/signup}" th:method="post">
+<form th:action="@{/signup}" th:object="${memberSignupDto}" th:method="post">
+    <div>
+    <label for="email" th:text="#{label.member.email}">이메일</label>
+    <input type="email" id="email" th:field="*{email}" placeholder="이메일을 입력하세요">
+    <div th:errors="*{email}"></div>
+    </div>
+
+    <div>
     <label for="username" th:text="#{label.member.username}">아이디</label>
-    <input type="text" name="username" id="username" placeholder="아이디를 입력하세요">
+    <input type="text" th:field="*{username}" id="username" placeholder="아이디를 입력하세요">
+        <div th:errors="*{username}"></div>
+    </div>
+
+    <div>
     <label for="password" th:text="#{label.member.password}">비밀번호</label>
-    <input type="password" name="password" id="password" placeholder="비밀번호를 입력하세요">
+    <input type="password" th:field="*{password}" id="password" placeholder="비밀번호를 입력하세요">
+        <div th:errors="*{password}"></div>
+    </div>
+
     <button type="submit" th:text="#{button.member.signup}">회원 가입</button>
     <h2 th:if="${param.statusSignup}" th:text="'이미 존재하는 회원입니다'"></h2>
 </form>
