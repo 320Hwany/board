@@ -7,7 +7,6 @@
 </head>
 <body>
 <h2 th:unless="${param.statusLoginFail}" th:text="'Welcome Page'"></h2>
-<h2 th:if="${param.statusLoginFail}" th:text="'로그인에 실패했습니다. 다시 시도해주세요'"></h2>
 <h2 th:if="${param.status}" th:text="'회원 가입이 되었습니다'"></h2>
 <h2 th:if="${param.statusDeleteMember}" th:text="'회원 탈퇴가 되었습니다'"></h2>
 <h2 th:if="${param.statusUpdateMember}" th:text="'회원 정보가 수정되었습니다.'"></h2>

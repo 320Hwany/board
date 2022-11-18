@@ -2,6 +2,7 @@ package toyproject.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import toyproject.board.domain.Post;
 import toyproject.board.repository.PostRepository;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;

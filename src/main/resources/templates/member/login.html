@@ -11,6 +11,10 @@
 <div>
 <form th:action="@{/login}" th:object="${memberLoginDto}" th:method="post">
 
+    <div th:if="${#fields.hasGlobalErrors()}">
+        <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+    </div>
+
     <div>
   <label for="username" th:text="#{label.member.username}">아이디</label>
   <input type="text" th:field="*{username}" id="username" placeholder="아이디를 입력하세요">

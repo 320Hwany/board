@@ -11,8 +11,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.*;
 import toyproject.board.dto.member.*;
 import toyproject.board.service.MemberService;
-import toyproject.board.service.PostService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,7 +23,6 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
-    private final PostService postService;
 
     @GetMapping("/signup")
     public String signup(Model model) {
@@ -46,13 +46,14 @@ public class MemberController {
                 .build();
 
         Optional<Member> findMember = memberService.findByUsername(memberSignupDto.getUsername());
-        if (findMember.isEmpty()) {
-            memberService.signup(member);
-        } else {
-            redirectAttributes.addAttribute("statusSignup", true);
-            return "redirect:/signup";
+        if (findMember.isPresent()) {
+            bindingResult.reject("signupError", new Object[]{}, null);
+            return "member/signup";
         }
+
+        memberService.signup(member);
         redirectAttributes.addAttribute("status", true);
+
         return "redirect:/";
     }
 
@@ -63,27 +64,37 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute MemberLoginDto memberLoginDto, BindingResult bindingResult,
-                        RedirectAttributes redirectAttributes) {
+    public String login(@Validated @ModelAttribute MemberLoginDto memberLoginDto,
+                        BindingResult bindingResult,
+                        HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return "/member/login";
         }
-        Member findMember = memberService.findByUsername(memberLoginDto.getUsername()).get();
+        // validation 을 만족하지만 존재하지 않는 아이디
+        Optional<Member> findMemberOptional = memberService.findByUsername(memberLoginDto.getUsername());
 
-        if (findMember.getPassword().equals(memberLoginDto.getPassword())) {
-            Long id = findMember.getId();
-            redirectAttributes.addAttribute("id", id);
-            return "redirect:/home/{id}";
-        } else {
-            redirectAttributes.addAttribute("statusLoginFail", true);
-            return "redirect:/";
+        if (findMemberOptional.isPresent()) {
+            Member findMember = findMemberOptional.get();
+            if (findMember.getPassword().equals(memberLoginDto.getPassword())) {
+                HttpSession session = request.getSession();
+                session.setAttribute("loginMember", findMember);
+                return "redirect:/home";
+            }
         }
+
+        bindingResult.reject("loginError", new Object[]{}, null);
+        return "/member/login";
     }
 
-    @GetMapping("/home/{id}")
-    public String home(@PathVariable Long id, Model model) {
+    @GetMapping("/home")
+    public String home(
+            @SessionAttribute(name = "loginMember", required = false) Member loginMember, Model model) {
 
-        Member member = memberService.findById(id);
+        if (loginMember == null) {
+            return "redirect:/";
+        }
+
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         List<Post> posts = member.getPosts();
         model.addAttribute("member", member);
         model.addAttribute("posts", posts);
