@@ -11,13 +11,14 @@
 |회원 가입 | /signup| Post| 
 |로그인 폼| /login| Get|
 |로그인|/login|Post|
-|홈 화면|/home/{id}|Get|
-|회원 삭제 폼|/deleteMember/{id}|Get|
-|회원 삭제|/deleteMember/{id}|Post|
-|회원 수정 폼|/updateMember/{id}|Get|
-|회원 수정|/updateMember/{id}|Post|
-|게시글 등록 폼|/home/{id}/registration|Get|
-|게시글 등록|/home/{id}/registration|Post|
+|로그아웃|/logout|Get|      
+|홈 화면|/home|Get|
+|회원 삭제 폼|/deleteMember|Get|
+|회원 삭제|/deleteMember|Post|
+|회원 수정 폼|/updateMember|Get|
+|회원 수정|/updateMember|Post|
+|게시글 등록 폼|/home/registration|Get|
+|게시글 등록|/home/registration|Post|
 |전체 게시글 보기|/home/postList|Get|
 |검색 게시글 찾기|/home/findPosts|Post|
 
@@ -35,7 +36,8 @@ Dependencies : Spring Web, Spring Data JPA, Lombok, Thymeleaf, H2 Database
 * 로그인을 할 때 @PostMapping에서 @ModelAttribute로 받을 때 Member가 아니라 id가 없는 MemberDto로 먼저 받아야 한다.  
 * Member와 Post를 연관관계 지어줄 때 Many 쪽인 Post에 setMember로 연결했다. 그러므로 postService로 post를 저장하기 전에 먼저 setMember를 사용해야 연관관계가 완성된다. 
 * Member에는 username으로 선언했는데 MemberRepository에 findByName() 메소드를 만들었다. findByUsername()으로 만들어야 JpaRepository를 상속받아 정상적으로 작동한다.
-* Test코드를 작성할 때 @SpringBootTest를 해야 하는데 @SpringBootApplication이라고 해서 NPE가 계속 나왔다. 또한 이때는 DB를 연결하고 실행해야 한다.   
+* Test코드를 작성할 때 @SpringBootTest를 해야 하는데 @SpringBootApplication이라고 해서 NPE가 계속 나왔다.   
+또한 이때는 DB를 연결하고 실행해야 한다.   
 * 회원 수정 기능을 만들 때 member에 @Setter없이 하기 위해서 Member 클래스 안에 updateMember를 만들어주었다. 
 ```
 public Member updateMember(String username, String password) {
@@ -44,4 +46,13 @@ public Member updateMember(String username, String password) {
     return this;
 }
 ```
-또한 회원 수정은 JPA에서 따로 지원하는 기능은 없고 저장하고자 하는 Entity의 PK 값이 있으면 업데이트고 없으면 저장할 수 있다.
+또한 회원 수정은 JPA에서 따로 지원하는 기능은 없고 저장하고자 하는 Entity의 PK 값이 있으면 업데이트고 없으면 저장할 수 있다.   
+* 쿼리 파라미터로 {id} 회원을 로그인 상태로 유지하는 방법이 아닌 세션을 이용해서 유지되도록 하였다. 
+```
+@SessionAttribute(name = "loginMember", required = false) Member loginMember
+```
+이때 loginMember를 그대로 사용하면 영속성 컨텍스트가 없어 post데이터를 가져올 수 없었다. 이때는 MemberService를 이용해서  
+```
+Member member = memberService.findByUsername(loginMember.getUsername()).get();
+```
+member를 다시 찾아줬더니 해결되었다.
