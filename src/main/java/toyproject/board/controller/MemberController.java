@@ -106,7 +106,6 @@ public class MemberController {
                              Model model) {
 
         Member member = memberService.findByUsername(loginMember.getUsername()).get();
-        log.info("member={}", member.getUsername());
         model.addAttribute("member", member);
         model.addAttribute("memberDeleteDto", new MemberDeleteDto());
         return "member/deleteMember";
@@ -123,10 +122,12 @@ public class MemberController {
         Member member = memberService.findByUsername(loginMember.getUsername()).get();
         // String == 비교 말고 equals 사용해야함. String 은 불변 객체
         if (member.getPassword().equals(memberDeleteDto.getPassword()) &&
-        member.getPassword().equals(memberDeleteDto.getPasswordCheck())) {
+                member.getPassword().equals(memberDeleteDto.getPasswordCheck())) {
             redirectAttributes.addAttribute("statusDeleteMember", true);
             memberService.deleteMember(member);
-            session.invalidate();
+            if (session != null) {
+                session.invalidate();
+            }
             return "redirect:/";
         }
 
@@ -158,8 +159,19 @@ public class MemberController {
         redirectAttributes.addAttribute("statusUpdateMember", true);
 
         HttpSession session = request.getSession(false);
-        session.invalidate();
+        if (session != null) {
+            session.invalidate();
+        }
 
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logoutForm(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
         return "redirect:/";
     }
 }
