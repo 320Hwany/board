@@ -23,30 +23,31 @@ public class PostController {
     private final MemberService memberService;
     private final PostService postService;
 
-    @GetMapping("/{id}/registration")
-    public String registrationForm(@PathVariable Long id, Model model) {
-        Member member = memberService.findById(id);
+    @GetMapping("/registration")
+    public String registrationForm(
+            @SessionAttribute(name = "loginMember", required = false) Member member,
+            Model model) {
+
         model.addAttribute("member", member);
         return "post/registration";
     }
 
-    @PostMapping("/{id}/registration")
-    public String registration(@PathVariable Long id, @ModelAttribute PostDto postDto,
+    @PostMapping("/registration")
+    public String registration(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                               @ModelAttribute PostDto postDto,
                                RedirectAttributes redirectAttributes) {
-        Member member = memberService.findById(id);
-
         Post savePost = Post.builder()
                 .title(postDto.getTitle())
                 .body(postDto.getBody())
                 .build();
 
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         savePost.setMember(member); // 연관관계 메소드를 이용해서 먼저 set 한 후 postService 로 저장해야 한다
         Post post = postService.save(savePost);
 
-        redirectAttributes.addAttribute("id", id);
         redirectAttributes.addAttribute("statusRegistration", true);
 
-        return "redirect:/home/{id}";
+        return "redirect:/home";
     }
 
     @GetMapping("/postList")

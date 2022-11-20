@@ -101,53 +101,64 @@ public class MemberController {
         return "member/home";
     }
 
-    @GetMapping("/deleteMember/{id}")
-    public String deleteForm(@PathVariable Long id, Model model) {
-        Member member = memberService.findById(id);
+    @GetMapping("/deleteMember")
+    public String deleteForm(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                             Model model) {
+
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
+        log.info("member={}", member.getUsername());
         model.addAttribute("member", member);
         model.addAttribute("memberDeleteDto", new MemberDeleteDto());
         return "member/deleteMember";
     }
 
-    @PostMapping("/deleteMember/{id}") // form method post 설정안함
-    public String deleteMember(@PathVariable Long id, @ModelAttribute MemberDeleteDto memberDeleteDto,
+    @PostMapping("/deleteMember") // form method post 설정안함
+    public String deleteMember(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                               @ModelAttribute MemberDeleteDto memberDeleteDto,
                                BindingResult bindingResult,
+                               HttpServletRequest request,
                                RedirectAttributes redirectAttributes) {
-        Member member = memberService.findById(id);
 
+        HttpSession session = request.getSession(false);
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         // String == 비교 말고 equals 사용해야함. String 은 불변 객체
         if (member.getPassword().equals(memberDeleteDto.getPassword()) &&
         member.getPassword().equals(memberDeleteDto.getPasswordCheck())) {
             redirectAttributes.addAttribute("statusDeleteMember", true);
             memberService.deleteMember(member);
+            session.invalidate();
             return "redirect:/";
         }
 
         redirectAttributes.addAttribute("statusDeleteFail", true);
-        return "redirect:/deleteMember/{id}";
+        return "redirect:/deleteMember";
     }
 
-    @GetMapping("/updateMember/{id}")
-    public String updateMember(@PathVariable Long id, Model model) {
-        Member member = memberService.findById(id);
+    @GetMapping("/updateMember")
+    public String updateMember(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                               Model model) {
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         model.addAttribute("member", member);
         return "member/updateMember";
     }
 
-    @PostMapping("/updateMember/{id}")
-    public String updateMember(@PathVariable Long id, @Validated @ModelAttribute MemberUpdateDto memberUpdateDto,
+    @PostMapping("/updateMember")
+    public String updateMember(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                               @Validated @ModelAttribute MemberUpdateDto memberUpdateDto,
                                BindingResult bindingResult,
+                               HttpServletRequest request,
                                RedirectAttributes redirectAttributes) {
-
         if (bindingResult.hasErrors()) {
             return "member/updateMember";
         }
 
-        Member member = memberService.findById(id);
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         member.updateMember(memberUpdateDto.getUsername(), memberUpdateDto.getPassword());
-
         memberService.signup(member);
         redirectAttributes.addAttribute("statusUpdateMember", true);
+
+        HttpSession session = request.getSession(false);
+        session.invalidate();
 
         return "redirect:/";
     }

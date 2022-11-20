@@ -7,7 +7,7 @@
 </head>
 <body>
 <h2>글 등록하기</h2>
-<form th:action="@{/home/{id}/registration(id=${member.id})}" th:method="post">
+<form th:action="@{/home/registration}" th:method="post">
     <label for="title" th:text="#{label.post.title}">게시글 제목</label>
     <input type="text" name="title" id="title" placeholder="글 제목을 입력하세요">
     <label for="body" th:text="#{label.post.body}">글 내용</label>
