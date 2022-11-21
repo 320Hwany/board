@@ -66,7 +66,9 @@ public class MemberController {
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute MemberLoginDto memberLoginDto,
                         BindingResult bindingResult,
+                        @RequestParam(defaultValue = "/") String redirectURL,
                         HttpServletRequest request) {
+
         if (bindingResult.hasErrors()) {
             return "/member/login";
         }
@@ -78,7 +80,8 @@ public class MemberController {
             if (findMember.getPassword().equals(memberLoginDto.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("loginMember", findMember);
-                return "redirect:/home";
+                log.info("redirectURL={}", redirectURL);
+                return "redirect:" + redirectURL;
             }
         }
 
