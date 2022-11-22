@@ -1,37 +1,37 @@
 package toyproject.board.service;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import toyproject.board.domain.Member;
 import toyproject.board.domain.Post;
+import toyproject.board.repository.MemberRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest  // @SpringBootTest 를 해야하는데 @SpringBootApplication 이라고 했다. // DB 실행하고 테스트하기
 @Transactional
+@ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
     // 실패 테스트도 만들기
-    @Autowired
-    private MemberService memberService;
+    @InjectMocks
+    MemberService memberService;
+
+    @Mock
+    MemberRepository memberRepository;
 
     @Test
     public void 회원가입_성공() {
         //given
-        Post post1 = new Post();
-        Post post2 = new Post();
-
-        List<Post> posts = new ArrayList<>();
-        posts.add(post1);
-        posts.add(post2);
-
-        Member member = new Member("yhwjd@naver.com","userA", "1234", posts);
+        Member member = new Member("yhwjd@naver.com","userA", "1234", null);
         //when
         Member savedMember = memberService.signup(member);
         //then

@@ -30,7 +30,7 @@ public class MemberController {
         return "member/signup";
     }
 
-    // @ModelAttribute 는 @Setter 있어야 한다!!!
+    // @ModelAttribute 는 @Setter 있어야 한다!!! @Setter 없앨 수가 있나...
     // Member 가 @Id 있기 때문에 Dto 만들어서 builder
     @PostMapping("/signup")
     public String join(@Validated @ModelAttribute MemberSignupDto memberSignupDto, BindingResult bindingResult,
@@ -66,13 +66,13 @@ public class MemberController {
     @PostMapping("/login")
     public String login(@Validated @ModelAttribute MemberLoginDto memberLoginDto,
                         BindingResult bindingResult,
-                        @RequestParam(defaultValue = "/") String redirectURL,
+                        @RequestParam(defaultValue = "/home") String redirectURL,
                         HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             return "/member/login";
         }
-        // validation 을 만족하지만 존재하지 않는 아이디
+
         Optional<Member> findMemberOptional = memberService.findByUsername(memberLoginDto.getUsername());
 
         if (findMemberOptional.isPresent()) {
@@ -80,11 +80,11 @@ public class MemberController {
             if (findMember.getPassword().equals(memberLoginDto.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("loginMember", findMember);
-                log.info("redirectURL={}", redirectURL);
                 return "redirect:" + redirectURL;
             }
         }
 
+        // validation 을 만족하지만 존재하지 않는 아이디
         bindingResult.reject("loginError", new Object[]{}, null);
         return "/member/login";
     }

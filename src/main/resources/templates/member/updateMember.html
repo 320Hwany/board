@@ -8,7 +8,7 @@
 <body>
 <h2 th:text="|${member.username}정보를 수정하여도 게시글은 유지됩니다.|"></h2>
 <div>
-<form th:action="@{/updateMember}" th:object="${member}" th:method="post">
+<form th:action th:object="${member}" th:method="post">
 
     <div>
         <label for="email" th:text="#{label.member.email}">이메일</label>

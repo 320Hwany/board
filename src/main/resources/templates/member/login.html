@@ -9,7 +9,7 @@
 <h2>로그인</h2>
 
 <div>
-<form th:action="@{/login}" th:object="${memberLoginDto}" th:method="post">
+<form th:action th:object="${memberLoginDto}" th:method="post">
 
     <div th:if="${#fields.hasGlobalErrors()}">
         <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
