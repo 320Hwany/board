@@ -33,8 +33,10 @@ Dependencies : Spring Web, Spring Data JPA, Lombok, Thymeleaf, H2 Database
 
 ## trouble shooting
 
-* 로그인을 할 때 @PostMapping에서 @ModelAttribute로 받을 때 Member가 아니라 id가 없는 MemberDto로 먼저 받아야 한다.  
-* Member와 Post를 연관관계 지어줄 때 Many 쪽인 Post에 setMember로 연결했다. 그러므로 postService로 post를 저장하기 전에 먼저 setMember를 사용해야 연관관계가 완성된다. 
+* 로그인을 할 때 @PostMapping에서 @ModelAttribute로 받을 때 Member가 아니라 id가 없는 MemberDto로 먼저 받아야 한다.   
+ModelAttribute가 들어온 값에 대해 setter를 이용해서 객체를 만들어주는데 id가 있는 Member로 받으려고 해서 문제 발생
+* Member와 Post를 연관관계 지어줄 때 Many 쪽인 Post에 setMember로 연결했다.   
+그러므로 postService로 post를 저장하기 전에 먼저 setMember를 사용해야 연관관계가 완성된다. 
 * Member에는 username으로 선언했는데 MemberRepository에 findByName() 메소드를 만들었다. findByUsername()으로 만들어야 JpaRepository를 상속받아 정상적으로 작동한다.
 * Test코드를 작성할 때 @SpringBootTest를 해야 하는데 @SpringBootApplication이라고 해서 NPE가 계속 나왔다.   
 또한 이때는 DB를 연결하고 실행해야 한다.   
@@ -56,3 +58,9 @@ public Member updateMember(String username, String password) {
 Member member = memberService.findByUsername(loginMember.getUsername()).get();
 ```
 member를 다시 찾아줬더니 해결되었다.
+* 전체 게시글을 보는 것은 로그인 후에 가능하다. 따라서 전체 게시글 보기를 클릭하면 다음 경로로 redirect된다.   
+/login?redirectURL=/home/postList
+다시 로그인을 하면 redirect된 경로로 접속을 하려고 했는데 계속 홈 화면으로 돌아갔다.   
+문제는 login.html에서 th:action="@{/login}" 으로 고정되어 있었기 때문이다.  
+th:action으로 바꿔주면 현재 URL과 같은 URL로 요청을 보낼 수 있다. 이때는 쿼리 파라미터 부분이 있기 때문에  
+@RequestParam을 이용해서 가져올 수 있다.
