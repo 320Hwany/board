@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <h2 th:text="${post.title}"></h2>
+    <p th:text="${post.body}"></p>
+
+  <form th:action="@{/home/postHome/{id}/deletePost(id=${post.id})}" th:method="post">
+      <button type="submit">게시글 삭제</button>
+  </form>
+</body>
+</html>

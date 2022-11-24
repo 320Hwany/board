@@ -7,6 +7,7 @@ import toyproject.board.domain.Post;
 import toyproject.board.repository.PostRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,5 +29,14 @@ public class PostService {
     public List<Post> findByTitle(String title) {
         List<Post> posts = postRepository.findByTitle(title);
         return posts;
+    }
+
+    public Post findById(Long id) {
+        Post post = postRepository.findById(id).get();
+        return post;
+    }
+
+    public void delete(Post post) {
+        postRepository.delete(post);
     }
 }

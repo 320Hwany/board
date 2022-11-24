@@ -92,7 +92,7 @@ public class MemberController {
     @GetMapping("/home")
     public String home(
             @SessionAttribute(name = "loginMember", required = false) Member loginMember, Model model) {
-
+            // 동시 접속시 세션 문제?
         if (loginMember == null) {
             return "redirect:/";
         }

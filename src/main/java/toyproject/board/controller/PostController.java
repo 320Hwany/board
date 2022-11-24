@@ -77,4 +77,20 @@ public class PostController {
 
         return "post/findPosts";
     }
+
+    @GetMapping("/postHome/{id}")
+    public String postHome(@PathVariable Long id, Model model) {
+        Post post = postService.findById(id);
+        model.addAttribute("post", post);
+        return "post/postHome";
+    }
+
+    @PostMapping("/postHome/{id}/deletePost")
+    public String deletePost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Post post = postService.findById(id);
+        postService.delete(post);
+        redirectAttributes.addAttribute("postDeleteStatus", true);
+
+        return "redirect:/";
+    }
 }

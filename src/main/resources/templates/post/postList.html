@@ -12,6 +12,7 @@
         <td th:text="|${postStat.count} : |"></td>
         <td th:text="|title : ${post.title}|"></td>
         <td th:text="|body : ${post.body}|"></td>
+        <a th:href="@{/home/postHome/{id}(id=${post.id})}">글 자세히 보기</a>
         <br>
     </tr>
     <h2>게시글 검색</h2>
