@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PostDto {
+public class PostUpdateDto {
 
     private String title;
     private String body;

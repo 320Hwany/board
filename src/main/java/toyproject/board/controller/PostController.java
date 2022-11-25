@@ -4,14 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.Member;
 import toyproject.board.domain.Post;
-import toyproject.board.dto.post.PostDto;
+import toyproject.board.dto.post.PostSaveDto;
 import toyproject.board.service.MemberService;
 import toyproject.board.service.PostService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -29,16 +31,23 @@ public class PostController {
             Model model) {
 
         model.addAttribute("member", member);
+        model.addAttribute("postSaveDto", new PostSaveDto());
         return "post/registration";
     }
 
+    // th:field 를 사용하여 valid 조건에 맞지 않을 때 원래 값 그대로 보존할 수 있다.
     @PostMapping("/registration")
     public String registration(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-                               @ModelAttribute PostDto postDto,
+                               @Valid @ModelAttribute PostSaveDto postSaveDto,
+                               BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            return "/post/registration";
+        }
         Post savePost = Post.builder()
-                .title(postDto.getTitle())
-                .body(postDto.getBody())
+                .title(postSaveDto.getTitle())
+                .body(postSaveDto.getBody())
                 .build();
 
         Member member = memberService.findByUsername(loginMember.getUsername()).get();

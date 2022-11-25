@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.*;
@@ -14,6 +13,7 @@ import toyproject.board.service.MemberService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public class MemberController {
     // @ModelAttribute 는 @Setter 있어야 한다!!! @Setter 없앨 수가 있나...
     // Member 가 @Id 있기 때문에 Dto 만들어서 builder
     @PostMapping("/signup")
-    public String join(@Validated @ModelAttribute MemberSignupDto memberSignupDto, BindingResult bindingResult,
+    public String join(@Valid @ModelAttribute MemberSignupDto memberSignupDto, BindingResult bindingResult,
                        RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
@@ -64,7 +64,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String login(@Validated @ModelAttribute MemberLoginDto memberLoginDto,
+    public String login(@Valid @ModelAttribute MemberLoginDto memberLoginDto,
                         BindingResult bindingResult,
                         @RequestParam(defaultValue = "/home") String redirectURL,
                         HttpServletRequest request) {
@@ -148,7 +148,7 @@ public class MemberController {
 
     @PostMapping("/updateMember")
     public String updateMember(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-                               @Validated @ModelAttribute MemberUpdateDto memberUpdateDto,
+                               @Valid @ModelAttribute MemberUpdateDto memberUpdateDto,
                                BindingResult bindingResult,
                                HttpServletRequest request,
                                RedirectAttributes redirectAttributes) {
