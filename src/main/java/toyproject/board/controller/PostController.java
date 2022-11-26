@@ -10,7 +10,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.Member;
 import toyproject.board.domain.Post;
 import toyproject.board.dto.post.PostSaveDto;
-import toyproject.board.service.MemberService;
 import toyproject.board.service.PostService;
 
 import javax.validation.Valid;
@@ -22,7 +21,6 @@ import java.util.List;
 @Slf4j
 public class PostController {
 
-    private final MemberService memberService;
     private final PostService postService;
 
     @GetMapping("/registration")
@@ -45,14 +43,9 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             return "/post/registration";
         }
-        Post savePost = Post.builder()
-                .title(postSaveDto.getTitle())
-                .body(postSaveDto.getBody())
-                .build();
+        Post savePost = postService.getPostByPostSaveDto(postSaveDto);
 
-        Member member = memberService.findByUsername(loginMember.getUsername()).get();
-        savePost.setMember(member); // 연관관계 메소드를 이용해서 먼저 set 한 후 postService 로 저장해야 한다
-        Post post = postService.save(savePost);
+        postService.setAssociation(loginMember, savePost);
 
         redirectAttributes.addAttribute("statusRegistration", true);
 

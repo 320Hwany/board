@@ -39,11 +39,7 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "member/signup";
         }
-        Member member = Member.builder()
-                .email(memberSignupDto.getEmail())
-                .username(memberSignupDto.getUsername())
-                .password(memberSignupDto.getPassword())
-                .build();
+        Member member = memberService.getMemberBySignupDto(memberSignupDto);
 
         Optional<Member> findMember = memberService.findByUsername(memberSignupDto.getUsername());
         if (findMember.isPresent()) {
@@ -75,20 +71,14 @@ public class MemberController {
 
         Optional<Member> findMemberOptional = memberService.findByUsername(memberLoginDto.getUsername());
 
-        if (findMemberOptional.isPresent()) {
-            Member findMember = findMemberOptional.get();
-            if (findMember.getPassword().equals(memberLoginDto.getPassword())) {
-                HttpSession session = request.getSession();
-                session.setAttribute("loginMember", findMember);
-                return "redirect:" + redirectURL;
-            }
-        }
+        String returnURL = memberService.checkSessionLogin(memberLoginDto,
+                redirectURL, request, findMemberOptional);
+        if (returnURL != null) return returnURL;
 
         // validation 을 만족하지만 존재하지 않는 아이디
         bindingResult.reject("loginError", new Object[]{}, null);
         return "/member/login";
     }
-
     @GetMapping("/home")
     public String home(
             @SessionAttribute(name = "loginMember", required = false) Member loginMember, Model model) {
@@ -124,15 +114,9 @@ public class MemberController {
         HttpSession session = request.getSession(false);
         Member member = memberService.findByUsername(loginMember.getUsername()).get();
         // String == 비교 말고 equals 사용해야함. String 은 불변 객체
-        if (member.getPassword().equals(memberDeleteDto.getPassword()) &&
-                member.getPassword().equals(memberDeleteDto.getPasswordCheck())) {
-            redirectAttributes.addAttribute("statusDeleteMember", true);
-            memberService.deleteMember(member);
-            if (session != null) {
-                session.invalidate();
-            }
-            return "redirect:/";
-        }
+        String redirectURL = memberService.checkPasswordForDelete(memberDeleteDto,
+                redirectAttributes, session, member);
+        if (redirectURL != null) return redirectURL;
 
         redirectAttributes.addAttribute("statusDeleteFail", true);
         return "redirect:/deleteMember";
@@ -161,20 +145,14 @@ public class MemberController {
         memberService.signup(member);
         redirectAttributes.addAttribute("statusUpdateMember", true);
 
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+        memberService.sessionInvalidate(request);
 
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logoutForm(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+        memberService.sessionInvalidate(request);
         return "redirect:/";
     }
 }

@@ -1,26 +1,21 @@
 package toyproject.board.service;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 import toyproject.board.domain.Member;
 import toyproject.board.domain.Post;
 import toyproject.board.repository.MemberRepository;
-import toyproject.board.repository.PostRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-@Transactional
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
 
@@ -30,18 +25,23 @@ class MemberServiceTest {
     @Mock
     private MemberRepository memberRepository;
 
-    @Test
-    public void 회원가입_성공() {
-        Member member = Member.builder()
-                .email("yhwjd@naver.com")
-                .username("yhwjd")
-                .password("1234")
-                .posts(null)
-                .build();
+    @Nested
+    @DisplayName("회원가입 ")
+    class Save {
+        @Test
+        @DisplayName("성공")
+        void 회원가입_성공() {
+            Member member = Member.builder()
+                    .email("yhwjd@naver.com")
+                    .username("yhwjd")
+                    .password("1234")
+                    .posts(null)
+                    .build();
 
-        Member savedMember = memberService.signup(member);
-        System.out.println(member);
-        System.out.println(savedMember);
+            System.out.println(memberRepository);
+            System.out.println(memberService.signup(member));
+            System.out.println(memberService.findByUsername(member.getUsername()));
+        }
     }
 
     @Test
