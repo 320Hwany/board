@@ -1,7 +1,15 @@
 ## CRUD 게시판 만들기
 
-회원가입, 로그인 페이지를 구현하고 각 회원마다 게시글을 등록할 수 있다. 각 회원은 정보를 수정하거나 탈퇴할 수 있고 동일한 아이디로는 가입할 수 없다.  
-모든 게시글 보기를 하면 모든 회원이 작성한 게시글이 나오며 몇번째 글이고 작성자가 누구인지 확인할 수 있다.
+공부한 내용을 이것 저것 적용해보는 곳     
+  
+* 회원 가입, 쿠키와 세션을 이용한 로그인 로그아웃 처리  
+* 회원관리, 게시글 관리, 파일 업로드, 파일 다운로드   
+* 기능 별로 Dto를 나눔
+* 스프링 인터셉터를 사용하여 로그인 창으로 보내고 로그인 후 redirect
+* @Valid로 validation 적용하고 bindingResult.hasError를 사용하여 필드 오류 메세지 처리  
+bindingResult.reject와 errors.properties를 사용하여 글로벌 오류 메세지 처리       
+* messages.properties를 사용하여 공통 메세지 처리  
+* 잘못된 URL을 요청하거나 서버 문제일 때 status 4xx, 5xx 오류 페이지 보여주기
 
 ## API 설계  
 
@@ -21,6 +29,10 @@
 |게시글 등록|/home/registration|Post|
 |전체 게시글 보기|/home/postList|Get|
 |검색 게시글 찾기|/home/findPosts|Post|
+|파일 업로드 폼|/upload|Get|
+|파일 업로드|/upload|Post|
+|파일 다운로드 폼|/download|Get|
+|파일 다운로드|/download|Post|
 
 ## 개발환경 
 
@@ -29,7 +41,7 @@ Spring Framework
 Project : Gradle project  
 Language : Java 11                
 Spring boot : 2.7.5     
-Dependencies : Spring Web, Spring Data JPA, Lombok, Thymeleaf, H2 Database 
+Dependencies : Spring Web, Spring Data JPA, Lombok, Thymeleaf, H2 Database, Validation
 
 ## trouble shooting
 
