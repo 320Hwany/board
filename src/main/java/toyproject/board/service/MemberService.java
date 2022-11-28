@@ -13,6 +13,7 @@ import toyproject.board.repository.MemberRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Slf4j
@@ -24,7 +25,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public Member signup(Member member) {
-
         Member saveMember = memberRepository.save(member);
         return saveMember;
     }
@@ -48,6 +48,7 @@ public class MemberService {
                 .email(memberSignupDto.getEmail())
                 .username(memberSignupDto.getUsername())
                 .password(memberSignupDto.getPassword())
+                .localDateTime(LocalDateTime.now())
                 .build();
 
         return member;

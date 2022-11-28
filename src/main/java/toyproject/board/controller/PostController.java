@@ -46,6 +46,7 @@ public class PostController {
         Post savePost = postService.getPostByPostSaveDto(postSaveDto);
 
         postService.setAssociation(loginMember, savePost);
+        postService.save(savePost);
 
         redirectAttributes.addAttribute("statusRegistration", true);
 

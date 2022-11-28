@@ -8,5 +8,5 @@ import lombok.Setter;
 public class PostUpdateDto {
 
     private String title;
-    private String body;
+    private String contents;
 }

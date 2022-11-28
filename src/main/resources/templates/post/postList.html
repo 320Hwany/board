@@ -5,22 +5,23 @@
     <title>Title</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
-<body>
-    <tr th:each="post : ${posts}">
-        <td th:text="|${post.member.username}이 쓴 게시글|"></td>
-        <br>
-        <td th:text="|${postStat.count} : |"></td>
-        <td th:text="|title : ${post.title}|"></td>
-        <td th:text="|body : ${post.body}|"></td>
-        <a th:href="@{/home/postHome/{id}(id=${post.id})}">글 자세히 보기</a>
-        <br>
-    </tr>
-    <h2>게시글 검색</h2>
+<h2>게시글 검색</h2>
 <form th:action="@{/home/findPosts}" th:method="post">
     <label for="title" th:text="#{label.post.title}">게시글 제목</label>
     <input type="text" id="title" name="title" placeholder="제목을 입력하세요">
     <button type="submit" th:text="#{button.post.search}">검색</button>
 </form>
+<body>
+    <tr th:each="post : ${posts}">
+        <ul>
+            <li>
+        <td th:text="|${post.member.username}이 쓴 게시글|"></td>
+            </li>
+        <td th:text="|${postStat.count} : |"></td>
+        <td th:text="|title : ${post.title}|"></td>
+        <a th:href="@{/home/postHome/{id}(id=${post.id})}">글 자세히 보기</a>
+        </ul>
+    </tr>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 </body>

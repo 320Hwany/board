@@ -7,11 +7,18 @@
 </head>
 <body>
 <tr th:each="post : ${posts}">
+    <div>
     <td th:text="${postStat.count}"></td>
     <td th:text="|작성자 : ${post.member.username} |"></td>
+    </div>
+
+    <div>
     <td th:text="|제목 : ${post.title} |"></td>
-    <td th:text="|내용 : ${post.body} |"></td>
-    <br>
+    </div>
+
+    <div>
+    <td th:text="|내용 : ${post.contents} |"></td>
+    </div>
 </tr>
 <h2 th:if="${param.statusNoList}" th:text="'검색한 제목의 게시글이 존재하지 않습니다.'"></h2>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

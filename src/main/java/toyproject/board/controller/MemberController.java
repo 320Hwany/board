@@ -127,6 +127,7 @@ public class MemberController {
                                Model model) {
         Member member = memberService.findByUsername(loginMember.getUsername()).get();
         model.addAttribute("member", member);
+        model.addAttribute("memberUpdateDto", new MemberUpdateDto());
         return "member/updateMember";
     }
 
@@ -135,12 +136,15 @@ public class MemberController {
                                @Valid @ModelAttribute MemberUpdateDto memberUpdateDto,
                                BindingResult bindingResult,
                                HttpServletRequest request,
+                               Model model,
                                RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "member/updateMember";
-        }
 
         Member member = memberService.findByUsername(loginMember.getUsername()).get();
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("member", member);
+            return "member/updateMember";
+        }
         member.updateMember(memberUpdateDto.getUsername(), memberUpdateDto.getPassword());
         memberService.signup(member);
         redirectAttributes.addAttribute("statusUpdateMember", true);

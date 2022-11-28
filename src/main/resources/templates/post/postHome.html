@@ -6,8 +6,8 @@
 </head>
 <body>
   <h2 th:text="${post.title}"></h2>
-    <p th:text="${post.body}"></p>
-
+    <p th:text="${post.contents}"></p>
+<p th:text="|작성일자 : ${{post.localDateTime}}|"></p>
   <form th:action="@{/home/postHome/{id}/deletePost(id=${post.id})}" th:method="post">
       <button type="submit">게시글 삭제</button>
   </form>
