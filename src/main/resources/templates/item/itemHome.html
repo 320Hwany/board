@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <h2>주문 상품을 입력해주세요</h2>
+  <form th:action th:method="post">
+
+      <div>
+          <label for="itemName">상품 이름</label>
+          <input type="text" id="itemName" name="itemName" placeholder="상품 이름을 입력해주세요">
+      </div>
+
+      <div>
+          <label for="price">상품 가격</label>
+          <input type="text" id="price" name="price" placeholder="상품 가격을 입력해주세요">
+      </div>
+
+      <div>
+          <label for="quantity">상품 수량</label>
+          <input type="text" id="quantity" name="quantity" placeholder="상품 수량을 입력해주세요">
+      </div>
+
+      <button type="submit">장바구니에 담기</button>
+  </form>
+</body>
+</html>

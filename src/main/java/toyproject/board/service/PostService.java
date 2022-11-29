@@ -11,7 +11,6 @@ import toyproject.board.repository.PostRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @RequiredArgsConstructor
 @Service
 @Transactional
@@ -56,6 +55,6 @@ public class PostService {
 
     public void setAssociation(Member loginMember, Post savePost) {
         Member member = memberService.findByUsername(loginMember.getUsername()).get();
-        savePost.setMember(member); // 연관관계 메소드를 이용해서 먼저 set 한 후 postService 로 저장해야 한다
+        savePost.changeMember(member); // 연관관계 메소드를 이용해서 먼저 set 한 후 postService 로 저장해야 한다
     }
 }

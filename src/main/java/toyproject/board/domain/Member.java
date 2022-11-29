@@ -1,9 +1,6 @@
 package toyproject.board.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -35,6 +32,9 @@ public class Member {
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Post> posts;
 
+    @OneToOne(mappedBy = "member")
+    private Order order;
+
     @Builder
     public Member(String email, String username, String password, List<Post> posts, LocalDateTime localDateTime) {
         this.email = email;
@@ -48,5 +48,9 @@ public class Member {
         this.username = username;
         this.password = password;
         return this;
+    }
+
+    public void connectOrder(Order order) {
+        this.order = order;
     }
 }

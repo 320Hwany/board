@@ -40,7 +40,7 @@ public class Post {
         this.localDateTime = localDateTime;
     }
 
-    public void setMember(Member member) {
+    public void changeMember(Member member) {
         this.member = member;
         member.getPosts().add(this);
     }
