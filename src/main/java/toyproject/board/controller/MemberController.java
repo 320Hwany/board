@@ -79,15 +79,16 @@ public class MemberController {
         bindingResult.reject("loginError", new Object[]{}, null);
         return "/member/login";
     }
+
     @GetMapping("/home")
     public String home(
             @SessionAttribute(name = "loginMember", required = false) Member loginMember, Model model) {
-            // 동시 접속시 세션 문제?
+        // 동시 접속시 세션 문제?
         if (loginMember == null) {
             return "redirect:/";
         }
 
-        Member member = memberService.findByUsername(loginMember.getUsername()).get();
+        Member member = memberService.findById(loginMember.getId());
         List<Post> posts = member.getPosts();
         model.addAttribute("member", member);
         model.addAttribute("posts", posts);
@@ -98,7 +99,7 @@ public class MemberController {
     public String deleteForm(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
                              Model model) {
 
-        Member member = memberService.findByUsername(loginMember.getUsername()).get();
+        Member member = memberService.findById(loginMember.getId());
         model.addAttribute("member", member);
         model.addAttribute("memberDeleteDto", new MemberDeleteDto());
         return "member/deleteMember";
@@ -112,7 +113,7 @@ public class MemberController {
                                RedirectAttributes redirectAttributes) {
 
         HttpSession session = request.getSession(false);
-        Member member = memberService.findByUsername(loginMember.getUsername()).get();
+        Member member = memberService.findById(loginMember.getId());
         // String == 비교 말고 equals 사용해야함. String 은 불변 객체
         String redirectURL = memberService.checkPasswordForDelete(memberDeleteDto,
                 redirectAttributes, session, member);
@@ -125,7 +126,7 @@ public class MemberController {
     @GetMapping("/updateMember")
     public String updateMember(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
                                Model model) {
-        Member member = memberService.findByUsername(loginMember.getUsername()).get();
+        Member member = memberService.findById(loginMember.getId());
         model.addAttribute("member", member);
         model.addAttribute("memberUpdateDto", new MemberUpdateDto());
         return "member/updateMember";
@@ -139,7 +140,7 @@ public class MemberController {
                                Model model,
                                RedirectAttributes redirectAttributes) {
 
-        Member member = memberService.findByUsername(loginMember.getUsername()).get();
+        Member member = memberService.findById(loginMember.getId());
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("member", member);
@@ -158,5 +159,33 @@ public class MemberController {
     public String logoutForm(HttpServletRequest request) {
         memberService.sessionInvalidate(request);
         return "redirect:/";
+    }
+
+    @GetMapping("/recharge")
+    public String rechargeForm(Model model) {
+        model.addAttribute("memberRechargeDto", new MemberRechargeDto());
+        return "recharge/rechargeForm";
+    }
+
+    @PostMapping("/recharge")
+    public String recharge(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                           @ModelAttribute MemberRechargeDto memberRechargeDto,
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes) {
+
+        Member member = memberService.findById(loginMember.getId());
+
+        if (bindingResult.hasErrors()) {
+            return "recharge/rechargeForm";
+        }
+
+        if (member.getPassword().equals(memberRechargeDto.getPassword())) {
+            memberService.recharge(member, memberRechargeDto);
+            redirectAttributes.addAttribute("statusRecharge", true);
+            return "redirect:/home";
+        }
+
+        bindingResult.reject("rechargeError", new Object[]{}, null);
+        return "recharge/rechargeForm";
     }
 }

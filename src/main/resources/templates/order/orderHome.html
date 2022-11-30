@@ -6,8 +6,9 @@
 </head>
 <body>
     <h2>주문 페이지입니다.</h2>
-    <p th:text="|주문 고객 : ${order.member.username}|"></p>
-    <tr th:each="item : ${order.items}">
+    <h2 th:if="${param.isPresentOrder}" th:text="'주문하신 상품이 없습니다.'"></h2>
+    <p th:unless="${param.isPresentOrder}" th:text="|주문 고객 : ${order.member.username}|"></p>
+    <tr th:unless="${param.isPresentOrder}" th:each="item : ${order.items}">
         <td th:text="|상품 이름 : ${item.itemName}|"></td>
         <td th:text="|상품 가격 : ${item.price}|"></td>
         <td th:text="|주문 수량 : ${item.quantity}|"></td>

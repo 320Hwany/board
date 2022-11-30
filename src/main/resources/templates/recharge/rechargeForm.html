@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <h2>충전 하기</h2>
+
+  <form th:action th:object="${memberRechargeDto}" th:method="post">
+
+    <div th:if="${#fields.hasGlobalErrors()}">
+      <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+    </div>
+
+    <div>
+    <label for="password">패스워드</label>
+    <input type="password" id="password" th:field="*{password}" placeholder="비밀번호를 입력해주세요">
+      <div th:errors="*{password}"></div>
+    </div>
+
+    <div>
+      <label for="money">충전 금액</label>
+      <input type="text" id="money" th:field="*{money}" placeholder="충전할 금액을 입력해주세요">
+      <div th:errors="*{money}"></div>
+    </div>
+    <button type="submit">충전</button>
+  </form>
+</body>
+</html>

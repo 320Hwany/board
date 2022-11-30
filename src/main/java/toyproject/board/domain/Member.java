@@ -29,10 +29,12 @@ public class Member {
     @DateTimeFormat(pattern = "yyyy:MM:dd HH:mm:ss")
     private LocalDateTime localDateTime;
 
+    private int money = 0;
+
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Post> posts;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", orphanRemoval = true)
     private Order order;
 
     @Builder
@@ -52,5 +54,9 @@ public class Member {
 
     public void connectOrder(Order order) {
         this.order = order;
+    }
+
+    public void rechargeMoney(int rechargeMoney) {
+        this.money = rechargeMoney;
     }
 }

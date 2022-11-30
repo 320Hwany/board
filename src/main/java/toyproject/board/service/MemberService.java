@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.Member;
 import toyproject.board.dto.member.MemberDeleteDto;
 import toyproject.board.dto.member.MemberLoginDto;
+import toyproject.board.dto.member.MemberRechargeDto;
 import toyproject.board.dto.member.MemberSignupDto;
 import toyproject.board.repository.MemberRepository;
 
@@ -41,6 +42,10 @@ public class MemberService {
 
     public void deleteMember(Member member) {
         memberRepository.delete(member);
+    }
+
+    public void recharge(Member member, MemberRechargeDto memberRechargeDto) {
+        member.rechargeMoney(member.getMoney() + memberRechargeDto.getMoney());
     }
 
     public Member getMemberBySignupDto(MemberSignupDto memberSignupDto) {
