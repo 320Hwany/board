@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <form th:action th:object="${storageItem}" th:method="post">
+    상품명 : <input type="text" th:field="*{itemName}" disabled>
+    상품가격 : <input type="text" th:field="*{price}" disabled>
+    구매 수량 : <input type="text" id="quantity" name="quantity" placeholder="구매 수량을 입력해주세요">
+    <button type="submit">장바구니에 담기</button>
+  </form>
+</body>
+</html>

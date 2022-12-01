@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static javax.persistence.FetchType.LAZY;
 
 @Getter
@@ -24,20 +27,13 @@ public class Item {
 
     private int quantity;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @OneToMany(mappedBy = "item", orphanRemoval = true)
+    private List<OrderItems> orderItemsList = new ArrayList<>();
 
     @Builder
-    public Item(String itemName, int price, int quantity, Order order) {
+    public Item(String itemName, int price, int quantity) {
         this.itemName = itemName;
         this.price = price;
         this.quantity = quantity;
-        this.order = order;
-    }
-
-    public void changeOrder(Order order) {
-        this.order = order;
-        order.getItems().add(this);
     }
 }

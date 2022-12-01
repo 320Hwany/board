@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <tr th:each="storageItem : ${storageItems}">
+        <div>
+        <td th:text="|${storageItemStat.count}|"></td>
+            <div>
+        <td th:text="|상품명 : ${storageItem.itemName}|"></td>
+        <td th:text="|상품 가격 : ${storageItem.price}|"></td>
+        <td th:text="|상품 수량 : ${storageItem.quantity}|"></td>
+            </div>
+            <a th:href="@{/itemList/{id}(id=${storageItem.id})}">상품 주문하러 가기</a>
+        </div>
+        </form>
+    </tr>
+</body>
+</html>

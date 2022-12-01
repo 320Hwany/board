@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.Member;
 import toyproject.board.dto.member.MemberDeleteDto;
 import toyproject.board.dto.member.MemberLoginDto;
@@ -45,7 +44,7 @@ public class MemberService {
     }
 
     public void recharge(Member member, MemberRechargeDto memberRechargeDto) {
-        member.rechargeMoney(member.getMoney() + memberRechargeDto.getMoney());
+        member.calculateMoney(member.getMoney() + memberRechargeDto.getMoney());
     }
 
     public Member getMemberBySignupDto(MemberSignupDto memberSignupDto) {
@@ -59,32 +58,18 @@ public class MemberService {
         return member;
     }
 
-    public String checkSessionLogin(MemberLoginDto memberLoginDto, String redirectURL,
-                                            HttpServletRequest request, Optional<Member> findMemberOptional) {
-        if (findMemberOptional.isPresent()) {
-            Member findMember = findMemberOptional.get();
-            if (findMember.getPassword().equals(memberLoginDto.getPassword())) {
-                HttpSession session = request.getSession();
-                session.setAttribute("loginMember", findMember);
-                return "redirect:" + redirectURL;
-            }
-        }
-        return null;
+    public boolean checkPasswordForLogin(MemberLoginDto memberLoginDto, Member findMember) {
+        return findMember.getPassword().equals(memberLoginDto.getPassword());
     }
 
-    public String checkPasswordForDelete(MemberDeleteDto memberDeleteDto,
-                                          RedirectAttributes redirectAttributes,
-                                          HttpSession session, Member member) {
-        if (member.getPassword().equals(memberDeleteDto.getPassword()) &&
-                member.getPassword().equals(memberDeleteDto.getPasswordCheck())) {
-            redirectAttributes.addAttribute("statusDeleteMember", true);
-            memberRepository.delete(member);
-            if (session != null) {
-                session.invalidate();
-            }
-            return "redirect:/";
-        }
-        return null;
+    public void makeSessionForLogin(HttpServletRequest request, Member findMember) {
+        HttpSession session = request.getSession();
+        session.setAttribute("loginMember", findMember);
+    }
+
+    public boolean passwordCheckForDelete(MemberDeleteDto memberDeleteDto, Member member) {
+        return member.getPassword().equals(memberDeleteDto.getPassword()) &&
+                member.getPassword().equals(memberDeleteDto.getPasswordCheck());
     }
 
     public void sessionInvalidate(HttpServletRequest request) {

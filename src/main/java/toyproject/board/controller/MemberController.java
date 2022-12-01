@@ -30,7 +30,7 @@ public class MemberController {
         return "member/signup";
     }
 
-    // @ModelAttribute 는 @Setter 있어야 한다!!! @Setter 없앨 수가 있나...
+    // @ModelAttribute 는 @Setter 있어야 한다!!! Dto @Setter 없앨 수가 있나...
     // Member 가 @Id 있기 때문에 Dto 만들어서 builder
     @PostMapping("/signup")
     public String join(@Valid @ModelAttribute MemberSignupDto memberSignupDto, BindingResult bindingResult,
@@ -71,10 +71,13 @@ public class MemberController {
 
         Optional<Member> findMemberOptional = memberService.findByUsername(memberLoginDto.getUsername());
 
-        String returnURL = memberService.checkSessionLogin(memberLoginDto,
-                redirectURL, request, findMemberOptional);
-        if (returnURL != null) return returnURL;
-
+        if (findMemberOptional.isPresent()) {
+            Member findMember = findMemberOptional.get();
+            if (memberService.checkPasswordForLogin(memberLoginDto, findMember)) {
+                memberService.makeSessionForLogin(request, findMember);
+                return "redirect:" + redirectURL;
+            }
+        }
         // validation 을 만족하지만 존재하지 않는 아이디
         bindingResult.reject("loginError", new Object[]{}, null);
         return "/member/login";
@@ -115,9 +118,15 @@ public class MemberController {
         HttpSession session = request.getSession(false);
         Member member = memberService.findById(loginMember.getId());
         // String == 비교 말고 equals 사용해야함. String 은 불변 객체
-        String redirectURL = memberService.checkPasswordForDelete(memberDeleteDto,
-                redirectAttributes, session, member);
-        if (redirectURL != null) return redirectURL;
+
+        if (memberService.passwordCheckForDelete(memberDeleteDto, member)) {
+            redirectAttributes.addAttribute("statusDeleteMember", true);
+            memberService.deleteMember(member);
+            if (session != null) {
+                session.invalidate();
+            }
+            return "redirect:/";
+        }
 
         redirectAttributes.addAttribute("statusDeleteFail", true);
         return "redirect:/deleteMember";
@@ -159,33 +168,5 @@ public class MemberController {
     public String logoutForm(HttpServletRequest request) {
         memberService.sessionInvalidate(request);
         return "redirect:/";
-    }
-
-    @GetMapping("/recharge")
-    public String rechargeForm(Model model) {
-        model.addAttribute("memberRechargeDto", new MemberRechargeDto());
-        return "recharge/rechargeForm";
-    }
-
-    @PostMapping("/recharge")
-    public String recharge(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-                           @ModelAttribute MemberRechargeDto memberRechargeDto,
-                           BindingResult bindingResult,
-                           RedirectAttributes redirectAttributes) {
-
-        Member member = memberService.findById(loginMember.getId());
-
-        if (bindingResult.hasErrors()) {
-            return "recharge/rechargeForm";
-        }
-
-        if (member.getPassword().equals(memberRechargeDto.getPassword())) {
-            memberService.recharge(member, memberRechargeDto);
-            redirectAttributes.addAttribute("statusRecharge", true);
-            return "redirect:/home";
-        }
-
-        bindingResult.reject("rechargeError", new Object[]{}, null);
-        return "recharge/rechargeForm";
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -34,8 +35,8 @@ public class Member {
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Post> posts;
 
-    @OneToOne(mappedBy = "member", orphanRemoval = true)
-    private Order order;
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 
     @Builder
     public Member(String email, String username, String password, List<Post> posts, LocalDateTime localDateTime) {
@@ -52,11 +53,7 @@ public class Member {
         return this;
     }
 
-    public void connectOrder(Order order) {
-        this.order = order;
-    }
-
-    public void rechargeMoney(int rechargeMoney) {
-        this.money = rechargeMoney;
+    public void calculateMoney(int money) {
+        this.money = money;
     }
 }

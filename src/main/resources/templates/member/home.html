@@ -19,11 +19,26 @@
       </li>
   </tr>
   </tbody>
+
+  <div>
   <a th:href="@{/home/postList}">전체 글 보기</a>
   <a th:href="@{home/registration}">글 등록하기</a>
   <a th:href="@{/deleteMember}">회원 삭제하기</a>
   <a th:href="@{/updateMember}">회원 수정하기</a>
   <a th:href="@{/logout}">로그아웃하기</a>
+  </div>
+
+  <div>
+      <a th:href="@{/upload}">파일 업로드</a>
+      <a th:href="@{/download}">파일 다운로드</a>
+  </div>
+
+  <div>
+      <a th:href="@{/recharge}">충전하기</a>
+      <a th:href="@{/item}">상품 담기</a>
+      <a th:href="@{/order}">주문하기</a>
+  </div>
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 </body>

@@ -16,13 +16,26 @@ public class ItemService {
 
     public Item addItem(ItemDto itemDto) {
 
-        Item saveItem = Item.builder()
+        Item item = Item.builder()
                 .itemName(itemDto.getItemName())
                 .price(itemDto.getPrice())
                 .quantity(itemDto.getQuantity())
                 .build();
 
-        Item item = itemRepository.save(saveItem);
+        return item;
+    }
+
+    public void save(Item item) {
+        itemRepository.save(item);
+    }
+
+    public List<Item> findAll() {
+        List<Item> items = itemRepository.findAll();
+        return items;
+    }
+
+    public Item findById(Long id) {
+        Item item = itemRepository.findById(id).get();
         return item;
     }
 }
