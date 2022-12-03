@@ -32,13 +32,8 @@ public class OrderItems {
         this.item = item;
     }
 
-    public void changeOrder(Order order) {
+    public void changeOrderAndItem(Order order, Item item) {
         this.order = order;
-        order.getOrderItemsList().add(this);
-    }
-
-    public void changeItem(Item item) {
         this.item = item;
-        item.getOrderItemsList().add(this);
     }
 }

@@ -13,7 +13,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    public void makeOrder(Order order) {
+    public void save(Order order) {
         orderRepository.save(order);
     }
 

@@ -2,9 +2,12 @@ package toyproject.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import toyproject.board.domain.Item;
+import toyproject.board.domain.Member;
 import toyproject.board.domain.OrderItems;
 import toyproject.board.repository.OrderItemsRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,5 +26,23 @@ public class OrderItemsService {
 
     public void delete(OrderItems orderItems) {
         orderItemsRepository.delete(orderItems);
+    }
+
+    public List<OrderItems> getOrderItemsListForMember(Member member, List<OrderItems> orderItemsList) {
+        List<OrderItems> orderItemsForMember = new ArrayList<>();
+        for (OrderItems orderItems : orderItemsList) {
+            if (orderItems.getOrder().getMember() == member) {
+                orderItemsForMember.add(orderItems);
+            }
+        }
+        return orderItemsForMember;
+    }
+
+    public int calculateForPay(int price, List<OrderItems> orderItemsForMember) {
+        for (OrderItems orderItems : orderItemsForMember) {
+            Item item = orderItems.getItem();
+            price += item.getPrice() * item.getQuantity();
+        }
+        return price;
     }
 }

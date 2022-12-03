@@ -6,9 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static javax.persistence.FetchType.LAZY;
 
 @Getter
@@ -24,9 +21,6 @@ public class Order {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @OneToMany(mappedBy = "order", orphanRemoval = true)
-    private List<OrderItems> orderItemsList = new ArrayList<>();
 
     @Builder
     public Order(Member member) {

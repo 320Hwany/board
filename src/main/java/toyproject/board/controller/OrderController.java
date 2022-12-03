@@ -7,9 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import toyproject.board.domain.Item;
 import toyproject.board.domain.Member;
-import toyproject.board.domain.Order;
 import toyproject.board.domain.OrderItems;
 import toyproject.board.dto.member.MemberRechargeDto;
 import toyproject.board.service.MemberService;
@@ -17,7 +15,6 @@ import toyproject.board.service.OrderItemsService;
 import toyproject.board.service.OrderService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -62,13 +59,10 @@ public class OrderController {
                             Model model, RedirectAttributes redirectAttributes) {
 
         Member member = memberService.findById(loginMember.getId());
+
         List<OrderItems> orderItemsList = orderItemsService.findAll();
-        List<OrderItems> orderItemsForMember = new ArrayList<>();
-        for (OrderItems orderItems : orderItemsList) {
-            if (orderItems.getOrder().getMember() == member) {
-                orderItemsForMember.add(orderItems);
-            }
-        }
+        List<OrderItems> orderItemsForMember =
+                orderItemsService.getOrderItemsListForMember(member, orderItemsList);
 
         model.addAttribute("orderItemsForMember", orderItemsForMember);
         model.addAttribute("member", member);
@@ -86,27 +80,21 @@ public class OrderController {
                         RedirectAttributes redirectAttributes) {
 
         Member member = memberService.findById(loginMember.getId());
-        int price = 0;
 
         List<OrderItems> orderItemsList = orderItemsService.findAll();
-        List<OrderItems> orderItemsForMember = new ArrayList<>();
-        for (OrderItems orderItems : orderItemsList) {
-            if (orderItems.getOrder().getMember() == member) {
-                orderItemsForMember.add(orderItems);
-            }
-        }
+        List<OrderItems> orderItemsForMember =
+                orderItemsService.getOrderItemsListForMember(member, orderItemsList);
 
-        for (OrderItems orderItems : orderItemsForMember) {
-            Item item = orderItems.getItem();
-            price += item.getPrice() * item.getQuantity();
-        }
+        int price = orderItemsService.calculateForPay(0, orderItemsForMember);
 
         if (member.getMoney() >= price) {
             member.calculateMoney(member.getMoney() - price);
-        }
-
-        for (OrderItems orderItems : orderItemsForMember) {
-            orderItemsService.delete(orderItems);
+            for (OrderItems orderItems : orderItemsForMember) {
+                orderItemsService.delete(orderItems);
+            }
+        } else if (member.getMoney() < price) {
+            redirectAttributes.addAttribute("orderFail", true);
+            return "redirect:/order";
         }
 
         return "redirect:/home";
