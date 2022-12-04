@@ -7,14 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import toyproject.board.domain.Member;
-import toyproject.board.domain.Post;
+import toyproject.board.domain.member.Member;
 import toyproject.board.repository.MemberRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {

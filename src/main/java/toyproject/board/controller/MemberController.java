@@ -7,7 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import toyproject.board.domain.*;
+import toyproject.board.domain.member.Member;
+import toyproject.board.domain.post.Post;
 import toyproject.board.dto.member.*;
 import toyproject.board.service.MemberService;
 
@@ -68,9 +69,7 @@ public class MemberController {
         if (bindingResult.hasErrors()) {
             return "/member/login";
         }
-
         Optional<Member> findMemberOptional = memberService.findByUsername(memberLoginDto.getUsername());
-
         if (findMemberOptional.isPresent()) {
             Member findMember = findMemberOptional.get();
             if (memberService.checkPasswordForLogin(memberLoginDto, findMember)) {

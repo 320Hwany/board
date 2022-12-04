@@ -1,7 +1,7 @@
 package toyproject.board.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import toyproject.board.domain.Post;
+import toyproject.board.domain.post.Post;
 
 import java.util.List;
 import java.util.Optional;

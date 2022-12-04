@@ -1,7 +1,9 @@
-package toyproject.board.domain;
+package toyproject.board.domain.member;
 
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import toyproject.board.domain.order.Order;
+import toyproject.board.domain.post.Post;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -32,8 +34,8 @@ public class Member {
 
     private int money = 0;
 
-    @OneToMany(mappedBy = "member", orphanRemoval = true)
-    private List<Post> posts;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();

@@ -3,8 +3,8 @@ package toyproject.board.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import toyproject.board.domain.Member;
-import toyproject.board.domain.Post;
+import toyproject.board.domain.member.Member;
+import toyproject.board.domain.post.Post;
 import toyproject.board.dto.post.PostSaveDto;
 import toyproject.board.repository.PostRepository;
 
@@ -54,7 +54,7 @@ public class PostService {
     }
 
     public void setAssociation(Member loginMember, Post savePost) {
-        Member member = memberService.findByUsername(loginMember.getUsername()).get();
+        Member member = memberService.findById(loginMember.getId());
         savePost.changeMember(member); // 연관관계 메소드를 이용해서 먼저 set 한 후 postService 로 저장해야 한다
     }
 }

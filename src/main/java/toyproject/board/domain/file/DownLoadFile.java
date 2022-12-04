@@ -1,4 +1,4 @@
-package toyproject.board.domain;
+package toyproject.board.domain.file;
 
 import lombok.Getter;
 import lombok.Setter;

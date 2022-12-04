@@ -1,10 +1,14 @@
-package toyproject.board.domain;
+package toyproject.board.domain.order;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toyproject.board.domain.item.OrderItems;
+import toyproject.board.domain.member.Member;
 
 import javax.persistence.*;
+
+import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -21,6 +25,9 @@ public class Order {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<OrderItems> orderItems;
 
     @Builder
     public Order(Member member) {

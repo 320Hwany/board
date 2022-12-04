@@ -1,9 +1,9 @@
-package toyproject.board.domain;
+package toyproject.board.domain.item;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toyproject.board.domain.order.Order;
 
 import javax.persistence.*;
 
@@ -18,11 +18,11 @@ public class OrderItems {
     @Column(name = "order_items_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "item_id")
     private Item item;
 

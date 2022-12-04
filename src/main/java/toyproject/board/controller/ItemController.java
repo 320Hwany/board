@@ -6,8 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import toyproject.board.domain.*;
-import toyproject.board.dto.item.ItemDto;
+import toyproject.board.domain.item.Item;
+import toyproject.board.domain.item.OrderItems;
+import toyproject.board.domain.item.StorageItem;
+import toyproject.board.domain.member.Member;
+import toyproject.board.domain.order.Order;
 import toyproject.board.service.*;
 
 import java.util.List;
@@ -52,6 +55,7 @@ public class ItemController {
         }
         storageItem.minusQuantity(quantity);
 
+        // storageItem 은 단일 테이블 전략, Item 은 조인 전략으로 만들어보자
         Item item = itemService.makeItemByStorage(storageItem, quantity);
         Member member = memberService.findById(loginMember.getId());
         Order order = Order.builder()
@@ -67,6 +71,7 @@ public class ItemController {
         itemService.save(item);
         orderItemsService.save(orderItems);
         // 연관 관계 주인 쪽을 나중에 저장 시켜야 하는건가?
+        // JPA 에서 엔티티를 저장할 때 연관된 모든 엔티티는 영속 상태여야 한다.
 
         return "redirect:/";
     }

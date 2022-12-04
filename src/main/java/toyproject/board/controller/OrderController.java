@@ -7,8 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import toyproject.board.domain.Member;
-import toyproject.board.domain.OrderItems;
+import toyproject.board.domain.member.Member;
+import toyproject.board.domain.item.OrderItems;
+import toyproject.board.domain.order.Order;
 import toyproject.board.dto.member.MemberRechargeDto;
 import toyproject.board.service.MemberService;
 import toyproject.board.service.OrderItemsService;
@@ -80,17 +81,16 @@ public class OrderController {
                         RedirectAttributes redirectAttributes) {
 
         Member member = memberService.findById(loginMember.getId());
-
         List<OrderItems> orderItemsList = orderItemsService.findAll();
         List<OrderItems> orderItemsForMember =
                 orderItemsService.getOrderItemsListForMember(member, orderItemsList);
 
         int price = orderItemsService.calculateForPay(0, orderItemsForMember);
-
         if (member.getMoney() >= price) {
-            member.calculateMoney(member.getMoney() - price);
-            for (OrderItems orderItems : orderItemsForMember) {
-                orderItemsService.delete(orderItems);
+            if (orderItemsList.size() > 0) {
+                member.calculateMoney(member.getMoney() - price);
+                Order order = orderItemsList.get(0).getOrder();
+                orderService.deleteOrder(order);
             }
         } else if (member.getMoney() < price) {
             redirectAttributes.addAttribute("orderFail", true);

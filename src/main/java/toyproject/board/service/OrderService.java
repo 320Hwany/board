@@ -2,8 +2,8 @@ package toyproject.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import toyproject.board.domain.Member;
-import toyproject.board.domain.Order;
+import toyproject.board.domain.member.Member;
+import toyproject.board.domain.order.Order;
 import toyproject.board.dto.member.MemberRechargeDto;
 import toyproject.board.repository.OrderRepository;
 

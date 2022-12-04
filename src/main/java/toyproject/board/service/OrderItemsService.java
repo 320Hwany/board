@@ -2,9 +2,9 @@ package toyproject.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import toyproject.board.domain.Item;
-import toyproject.board.domain.Member;
-import toyproject.board.domain.OrderItems;
+import toyproject.board.domain.item.Item;
+import toyproject.board.domain.member.Member;
+import toyproject.board.domain.item.OrderItems;
 import toyproject.board.repository.OrderItemsRepository;
 
 import java.util.ArrayList;

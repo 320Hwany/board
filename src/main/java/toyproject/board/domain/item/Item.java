@@ -1,4 +1,4 @@
-package toyproject.board.domain;
+package toyproject.board.domain.item;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,6 +15,8 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

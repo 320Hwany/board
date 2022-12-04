@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import toyproject.board.domain.Member;
+import toyproject.board.domain.member.Member;
 import toyproject.board.service.MemberService;
 
 @RequiredArgsConstructor

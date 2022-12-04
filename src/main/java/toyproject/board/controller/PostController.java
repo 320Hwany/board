@@ -7,9 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import toyproject.board.domain.Member;
-import toyproject.board.domain.Post;
+import toyproject.board.domain.member.Member;
+import toyproject.board.domain.post.Post;
 import toyproject.board.dto.post.PostSaveDto;
+import toyproject.board.service.MemberService;
 import toyproject.board.service.PostService;
 
 import javax.validation.Valid;
@@ -22,6 +23,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final MemberService memberService;
 
     @GetMapping("/registration")
     public String registrationForm(
@@ -44,9 +46,7 @@ public class PostController {
             return "/post/registration";
         }
         Post savePost = postService.getPostByPostSaveDto(postSaveDto);
-
         postService.setAssociation(loginMember, savePost);
-        postService.save(savePost);
 
         redirectAttributes.addAttribute("statusRegistration", true);
 
@@ -89,7 +89,9 @@ public class PostController {
     }
 
     @PostMapping("/postHome/{id}/deletePost")
-    public String deletePost(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deletePost(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                             @PathVariable Long id, RedirectAttributes redirectAttributes) {
+        Member member = memberService.findById(loginMember.getId());
         Post post = postService.findById(id);
         postService.delete(post);
         redirectAttributes.addAttribute("postDeleteStatus", true);

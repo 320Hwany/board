@@ -2,7 +2,7 @@ package toyproject.board.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import toyproject.board.domain.StorageItem;
+import toyproject.board.domain.item.StorageItem;
 import toyproject.board.repository.ItemStorageRepository;
 
 import java.util.List;

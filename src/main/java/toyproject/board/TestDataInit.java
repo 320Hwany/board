@@ -2,8 +2,8 @@ package toyproject.board;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import toyproject.board.domain.Member;
-import toyproject.board.domain.StorageItem;
+import toyproject.board.domain.member.Member;
+import toyproject.board.domain.item.StorageItem;
 import toyproject.board.repository.ItemStorageRepository;
 import toyproject.board.repository.MemberRepository;
 

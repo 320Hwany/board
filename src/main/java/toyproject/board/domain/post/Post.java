@@ -1,10 +1,11 @@
-package toyproject.board.domain;
+package toyproject.board.domain.post;
 
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import toyproject.board.domain.member.Member;
 
 import javax.persistence.*;
 
@@ -42,6 +43,8 @@ public class Post {
 
     public void changeMember(Member member) {
         this.member = member;
-        member.getPosts().add(this);
+        if (member != null) {
+            member.getPosts().add(this);
+        }
     }
 }

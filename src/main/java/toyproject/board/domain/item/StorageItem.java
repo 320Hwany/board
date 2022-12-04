@@ -1,4 +1,4 @@
-package toyproject.board.domain;
+package toyproject.board.domain.item;
 
 import lombok.AccessLevel;
 import lombok.Getter;
