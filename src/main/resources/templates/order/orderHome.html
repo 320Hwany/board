@@ -11,15 +11,16 @@
 
     <p th:unless="${param.isPresentOrder}" th:text="|주문 고객 : ${member.getUsername()}|"></p>
 
-    <tr th:unless="${param.isPresentOrder}" th:each="orderItems : ${orderItemsForMember}">
-        <td th:text="|상품 이름 : ${orderItems.item.itemName}|"></td>
-        <td th:text="|상품 가격 : ${orderItems.item.price}|"></td>
-        <td th:text="|주문 수량 : ${orderItems.item.quantity}|"></td>
-        <br>
-    </tr>
-
-    <form th:action th:method="post">
+    <form th:action th:object="${orderDto}" th:method="post">
+    <div th:unless="${param.isPresentOrder}" th:each="orderItems : ${orderDtoList}">
+        <input type="checkbox" th:field="*{orderItemsList}" th:value="${orderItems.key}">
+        <label th:for="${#ids.prev('orderItemsList')}"
+               th:text="|상품 이름 : ${orderItems.value.item.itemName}
+               상품 가격 : ${orderItems.value.item.price}
+               주문 수량 : ${orderItems.value.item.quantity}|"></label>
+    </div>
     <button type="submit">주문 하기</button>
     </form>
 </body>
+
 </html>

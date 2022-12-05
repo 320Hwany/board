@@ -39,10 +39,6 @@ public class PostService {
         return post;
     }
 
-    public void delete(Post post) {
-        postRepository.delete(post);
-    }
-
     public Post getPostByPostSaveDto(PostSaveDto postSaveDto) {
         Post savePost = Post.builder()
                 .title(postSaveDto.getTitle())
@@ -56,5 +52,11 @@ public class PostService {
     public void setAssociation(Member loginMember, Post savePost) {
         Member member = memberService.findById(loginMember.getId());
         savePost.changeMember(member); // 연관관계 메소드를 이용해서 먼저 set 한 후 postService 로 저장해야 한다
+    }
+
+    public void deletePost(Member loginMember, Long id) {
+        Member member = memberService.findById(loginMember.getId());
+        Post post = findById(id);
+        member.getPosts().remove(post);
     }
 }

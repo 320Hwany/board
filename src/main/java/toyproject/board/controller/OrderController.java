@@ -11,12 +11,13 @@ import toyproject.board.domain.member.Member;
 import toyproject.board.domain.item.OrderItems;
 import toyproject.board.domain.order.Order;
 import toyproject.board.dto.member.MemberRechargeDto;
+import toyproject.board.dto.order.OrderDto;
 import toyproject.board.service.MemberService;
 import toyproject.board.service.OrderItemsService;
 import toyproject.board.service.OrderService;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -26,6 +27,22 @@ public class OrderController {
     private final MemberService memberService;
     private final OrderService orderService;
     private final OrderItemsService orderItemsService;
+
+    @ModelAttribute("orderDtoList")
+    public Map<Long, OrderItems> orderDto(
+            @SessionAttribute(name = "loginMember", required = false) Member loginMember) {
+        Member member = memberService.findById(loginMember.getId());
+        Map<Long, OrderItems> orderDtoList = new LinkedHashMap<>();
+        List<OrderItems> orderItemsList = orderItemsService.findAll();
+        List<OrderItems> orderItemsForMember =
+                orderItemsService.getOrderItemsListForMember(member, orderItemsList);
+
+        for (OrderItems orderItems : orderItemsForMember) {
+            orderDtoList.put(orderItems.getId(), orderItems);
+        }
+        return orderDtoList;
+    }
+
 
     @GetMapping("/recharge")
     public String rechargeForm(Model model) {
@@ -62,10 +79,6 @@ public class OrderController {
         Member member = memberService.findById(loginMember.getId());
 
         List<OrderItems> orderItemsList = orderItemsService.findAll();
-        List<OrderItems> orderItemsForMember =
-                orderItemsService.getOrderItemsListForMember(member, orderItemsList);
-
-        model.addAttribute("orderItemsForMember", orderItemsForMember);
         model.addAttribute("member", member);
         if (orderItemsList == null) {
             redirectAttributes.addAttribute("isPresentOrder", true);
@@ -73,23 +86,26 @@ public class OrderController {
             // redirectAttributes 를 썼는데 redirect 를 안하고 뷰네임을 리턴했다.
         }
 
+        model.addAttribute("orderDto", new OrderDto());
+
         return "order/orderHome";
     }
 
     @PostMapping("/order")
     public String order(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                        @ModelAttribute OrderDto orderDto,
                         RedirectAttributes redirectAttributes) {
 
-        Member member = memberService.findById(loginMember.getId());
-        List<OrderItems> orderItemsList = orderItemsService.findAll();
-        List<OrderItems> orderItemsForMember =
-                orderItemsService.getOrderItemsListForMember(member, orderItemsList);
+        log.info("orderDto.size={}", orderDto.getOrderItemsList().size());
 
-        int price = orderItemsService.calculateForPay(0, orderItemsForMember);
+        Member member = memberService.findById(loginMember.getId());
+        List<OrderItems> orderItemsList = orderDto.getOrderItemsList();
+
+        int price = orderItemsService.calculateForPay(orderItemsList);
         if (member.getMoney() >= price) {
-            if (orderItemsList.size() > 0) {
-                member.calculateMoney(member.getMoney() - price);
-                Order order = orderItemsList.get(0).getOrder();
+            member.calculateMoney(member.getMoney() - price);
+            List<Order> orders = orderItemsService.findOrdersByOrderDtoList(orderItemsList);
+            for (Order order : orders) {
                 orderService.deleteOrder(order);
             }
         } else if (member.getMoney() < price) {

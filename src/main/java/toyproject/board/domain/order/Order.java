@@ -8,6 +8,7 @@ import toyproject.board.domain.member.Member;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
@@ -26,8 +27,8 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderItems> orderItems;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItems> orderItems = new ArrayList<>();
 
     @Builder
     public Order(Member member) {

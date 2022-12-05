@@ -21,9 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class PostController {
-
     private final PostService postService;
-    private final MemberService memberService;
 
     @GetMapping("/registration")
     public String registrationForm(
@@ -91,9 +89,8 @@ public class PostController {
     @PostMapping("/postHome/{id}/deletePost")
     public String deletePost(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
                              @PathVariable Long id, RedirectAttributes redirectAttributes) {
-        Member member = memberService.findById(loginMember.getId());
-        Post post = postService.findById(id);
-        postService.delete(post);
+
+        postService.deletePost(loginMember, id);
         redirectAttributes.addAttribute("postDeleteStatus", true);
 
         return "redirect:/";

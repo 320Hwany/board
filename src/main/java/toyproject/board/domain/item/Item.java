@@ -29,6 +29,9 @@ public class Item {
 
     private int quantity;
 
+    @OneToMany(mappedBy = "item")
+    private List<OrderItems> orderItems = new ArrayList<>();
+
     @Builder
     public Item(String itemName, int price, int quantity) {
         this.itemName = itemName;

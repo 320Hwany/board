@@ -37,4 +37,9 @@ public class ItemService {
         Item item = itemRepository.findById(id).get();
         return item;
     }
+
+    public Item findByItemName(String name) {
+        Item item = itemRepository.findByItemName(name).get();
+        return item;
+    }
 }

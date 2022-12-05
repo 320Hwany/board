@@ -23,7 +23,6 @@ public class ItemController {
     private final MemberService memberService;
     private final ItemService itemService;
     private final ItemStorageService itemStorageService;
-    private final OrderItemsService orderItemsService;
 
     private final OrderService orderService;
 
@@ -58,18 +57,15 @@ public class ItemController {
         // storageItem 은 단일 테이블 전략, Item 은 조인 전략으로 만들어보자
         Item item = itemService.makeItemByStorage(storageItem, quantity);
         Member member = memberService.findById(loginMember.getId());
-        Order order = Order.builder()
-                .member(member)
-                .build();
-
+        Order order = new Order();
         order.changeOrder(member);
 
         OrderItems orderItems = new OrderItems();
         orderItems.changeOrderAndItem(order, item);
 
         orderService.save(order);
-        itemService.save(item);
-        orderItemsService.save(orderItems);
+//        itemService.save(item);
+//        orderItemsService.save(orderItems);
         // 연관 관계 주인 쪽을 나중에 저장 시켜야 하는건가?
         // JPA 에서 엔티티를 저장할 때 연관된 모든 엔티티는 영속 상태여야 한다.
 

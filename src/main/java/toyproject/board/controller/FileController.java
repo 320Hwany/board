@@ -1,5 +1,6 @@
 package toyproject.board.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
 import toyproject.board.domain.file.DownLoadFile;
+import toyproject.board.service.FileService;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,8 +20,11 @@ import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
+@RequiredArgsConstructor
 @Controller
 public class FileController {
+
+    private final FileService fileService;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -34,12 +39,7 @@ public class FileController {
             throws IOException {
         // 파일 여러 개를 업로드 하려면 HTML form 의 input name 이 배열 형식으로 들어가야 한다.
         // multiple 로 설정을 해도 그냥 file 하나를 받는 것으로 해서 적용되지 않았다.
-        for (MultipartFile file : multipartFiles) {
-            if (!file.isEmpty()) {
-                String fullPath = fileDir + file.getOriginalFilename();
-                file.transferTo(new File(fullPath));
-            }
-        }
+        fileService.fileUpload(multipartFiles);
         return "file/upload-form";
     }
 

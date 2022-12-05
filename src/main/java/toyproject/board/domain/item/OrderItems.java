@@ -34,6 +34,7 @@ public class OrderItems {
 
     public void changeOrderAndItem(Order order, Item item) {
         this.order = order;
+        order.getOrderItems().add(this);
         this.item = item;
     }
 }
