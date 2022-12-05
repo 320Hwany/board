@@ -50,6 +50,10 @@ Dependencies : Spring Web, Spring Data JPA, Lombok, Thymeleaf, H2 Database, Vali
 
 ## trouble shooting(위로 갈 수록 최신)
 
+* Post는 Member에서 orphanRemoval = true로 설정하여 참조 값을 제거하면 사라진다. PostController에서 참조 값을 제거했지만 계속 DB에 반영되지 않았다.
+이유를 찾아보니 트랜잭션이 다르면 다른 영속성 컨텍스트를 사용하는데 PostController는 트랜잭션이 없는 계층이기 때문에 준영속 상태였다.  
+따라서 이를 PostService에서 메소드를 만들어서 처리해주니 정상적으로 적용되었다.
+
 * member의 money를 calculate를 하면 member의 money에는 적용이 되지만 DB에는 적용이 되지 않았다.  
 ```
 if (member.getMoney() >= price) {
