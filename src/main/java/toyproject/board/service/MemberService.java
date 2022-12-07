@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import toyproject.board.domain.embeddable.Address;
 import toyproject.board.domain.member.Member;
 import toyproject.board.dto.member.MemberDeleteDto;
 import toyproject.board.dto.member.MemberLoginDto;
@@ -48,11 +49,15 @@ public class MemberService {
     }
 
     public Member getMemberBySignupDto(MemberSignupDto memberSignupDto) {
+
+        Address address = makeAddressFromMemberSignupDto(memberSignupDto);
+
         Member member = Member.builder()
                 .email(memberSignupDto.getEmail())
                 .username(memberSignupDto.getUsername())
                 .password(memberSignupDto.getPassword())
                 .localDateTime(LocalDateTime.now())
+                .address(address)
                 .build();
 
         return member;
@@ -77,5 +82,18 @@ public class MemberService {
         if (session != null) {
             session.invalidate();
         }
+    }
+
+    public Address makeAddressFromMemberSignupDto(MemberSignupDto memberSignupDto) {
+        String address = memberSignupDto.getAddress();
+        String[] addressList = address.split(" ", 3);
+        if (addressList.length < 3) {
+            return null;
+        }
+        String country = addressList[0];
+        String city = addressList[1];
+        String apartment = addressList[2];
+
+        return new Address(country, city, apartment);
     }
 }

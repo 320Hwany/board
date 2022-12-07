@@ -42,6 +42,10 @@ public class MemberController {
         }
         Member member = memberService.getMemberBySignupDto(memberSignupDto);
 
+        if (member.getAddress() == null) {
+            bindingResult.reject("addressError", new Object[]{}, null);
+            return "member/signup";
+        }
         Optional<Member> findMember = memberService.findByUsername(memberSignupDto.getUsername());
         if (findMember.isPresent()) {
             bindingResult.reject("signupError", new Object[]{}, null);

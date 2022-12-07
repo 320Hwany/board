@@ -2,6 +2,7 @@ package toyproject.board.domain.member;
 
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import toyproject.board.domain.embeddable.Address;
 import toyproject.board.domain.order.Order;
 import toyproject.board.domain.post.Post;
 
@@ -34,6 +35,9 @@ public class Member {
 
     private int money = 0;
 
+    @Embedded
+    private Address address;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
@@ -41,12 +45,14 @@ public class Member {
     private List<Order> orders = new ArrayList<>();
 
     @Builder
-    public Member(String email, String username, String password, List<Post> posts, LocalDateTime localDateTime) {
+    public Member(String email, String username, String password, List<Post> posts,
+                  LocalDateTime localDateTime, Address address) {
         this.email = email;
         this.username = username;
         this.password = password;
         this.posts = posts;
         this.localDateTime = localDateTime;
+        this.address = address;
     }
 
     public Member updateMember(String username, String password) {

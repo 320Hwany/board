@@ -31,6 +31,12 @@
         <div th:errors="*{password}"></div>
     </div>
 
+    <div>
+        <label for="address" th:text="#{label.member.address}">주소</label>
+        <input type="text" th:field="*{address}" id="address" placeholder="주소를 입력해주세요">
+        <div th:errors="*{address}"></div>
+    </div>
+
     <button type="submit" th:text="#{button.member.signup}">회원 가입</button>
 </form>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
