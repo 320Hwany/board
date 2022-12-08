@@ -10,7 +10,8 @@
 bindingResult.reject와 errors.properties를 사용하여 글로벌 오류 메세지 처리       
 * messages.properties를 사용하여 공통 메세지 처리  
 * 잘못된 URL을 요청하거나 서버 문제일 때 status 4xx, 5xx 오류 페이지 보여주기
-* 머니 충전 및 상품 주문 기능 (JPA 활용하여 연관 관계 매핑에 집중)
+* 머니 충전 및 상품 주문 기능 (JPA 활용하여 연관 관계 매핑에 집중) 
+* 상품 주문 멀티박스 체크, 주소정보 임베디드 타입으로 설정
 
 ## API 설계  
 
