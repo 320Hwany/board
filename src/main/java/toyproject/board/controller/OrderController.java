@@ -64,11 +64,11 @@ public class OrderController {
 
         if (orderService.passwordCheckForRecharge(memberRechargeDto, member)) {
             memberService.recharge(member, memberRechargeDto);
-            redirectAttributes.addAttribute("statusRecharge", true);
+            redirectAttributes.addAttribute("Recharge", true);
             return "redirect:/home";
         }
 
-        bindingResult.reject("rechargeError", new Object[]{}, null);
+        bindingResult.reject("GlobalRechargeError", new Object[]{}, null);
         return "recharge/rechargeForm";
     }
 
@@ -81,7 +81,7 @@ public class OrderController {
         List<OrderItems> orderItemsList = orderItemsService.findAll();
         model.addAttribute("member", member);
         if (orderItemsList == null) {
-            redirectAttributes.addAttribute("isPresentOrder", true);
+            redirectAttributes.addAttribute("noOrderError", true);
             return "redirect:/noOrder";
             // redirectAttributes 를 썼는데 redirect 를 안하고 뷰네임을 리턴했다.
         }
@@ -109,7 +109,7 @@ public class OrderController {
                 orderService.deleteOrder(order);
             }
         } else if (member.getMoney() < price) {
-            redirectAttributes.addAttribute("orderFail", true);
+            redirectAttributes.addAttribute("lackMoneyError", true);
             return "redirect:/order";
         }
 

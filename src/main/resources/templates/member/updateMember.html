@@ -28,7 +28,7 @@
     </div>
 
     <div>
-        <label for="localDateTime" th:text="|가입 일자|">가입 일자</label>
+        <label for="localDateTime" th:text="#{label.member.signupDate}">가입 일자</label>
         <input type="text" id="localDateTime" th:field="*{localDateTime}"
                th:value="${member.localDateTime}" disabled>
     </div>

@@ -23,7 +23,7 @@
     </div>
 
     <button type="submit" th:text="#{button.member.delete}">회원 탈퇴</button>
-    <h2 th:if="${param.statusDeleteFail}" th:text="'회원정보가 일치하지 않습니다'"></h2>
+    <h2 th:if="${param.statusDeleteFail}" th:text="#{status.DeleteMember}"></h2>
 </form>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

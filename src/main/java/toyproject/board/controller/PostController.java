@@ -46,7 +46,7 @@ public class PostController {
         Post savePost = postService.getPostByPostSaveDto(postSaveDto);
         postService.setAssociation(loginMember, savePost);
 
-        redirectAttributes.addAttribute("statusRegistration", true);
+        redirectAttributes.addAttribute("postRegistration", true);
 
         return "redirect:/home";
     }
@@ -70,7 +70,7 @@ public class PostController {
         List<Post> posts = postService.findByTitle(title);
 
         if (posts.size() == 0) {
-            redirectAttributes.addAttribute("statusNoList", true);
+            redirectAttributes.addAttribute("noListError", true);
             return "redirect:/home/findPosts";
         }
         // redirectAttributes 는 redirect:/ 를 return 할 때 사용
@@ -91,7 +91,7 @@ public class PostController {
                              @PathVariable Long id, RedirectAttributes redirectAttributes) {
 
         postService.deletePost(loginMember, id);
-        redirectAttributes.addAttribute("postDeleteStatus", true);
+        redirectAttributes.addAttribute("postDelete", true);
 
         return "redirect:/";
     }

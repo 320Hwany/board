@@ -20,7 +20,7 @@
     <td th:text="|내용 : ${post.contents} |"></td>
     </div>
 </tr>
-<h2 th:if="${param.statusNoList}" th:text="'검색한 제목의 게시글이 존재하지 않습니다.'"></h2>
+<h2 th:if="${param.noListError}" th:text="#{noListError}"></h2>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript" src="/js/bootstrap.min.js"></script>
 </body>

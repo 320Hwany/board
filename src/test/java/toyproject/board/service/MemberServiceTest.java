@@ -3,21 +3,21 @@ package toyproject.board.service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import toyproject.board.domain.member.Member;
-import toyproject.board.repository.MemberRepository;
 
-@ExtendWith(MockitoExtension.class)
+import java.time.LocalDateTime;
+
+import static org.assertj.core.api.Assertions.*;
+
+@SpringBootTest
+@Transactional
 class MemberServiceTest {
 
-    @InjectMocks
+    @Autowired
     private MemberService memberService;
-
-    @Mock
-    private MemberRepository memberRepository;
 
     @Nested
     @DisplayName("회원가입 ")
@@ -25,16 +25,39 @@ class MemberServiceTest {
         @Test
         @DisplayName("성공")
         void 회원가입_성공() {
+            //given
             Member member = Member.builder()
                     .email("yhwjd@naver.com")
                     .username("yhwjd")
                     .password("1234")
                     .posts(null)
+                    .localDateTime(LocalDateTime.now())
+                    .address(null)
                     .build();
 
-            System.out.println(memberRepository);
-            System.out.println(memberService.signup(member));
-            System.out.println(memberService.findByUsername(member.getUsername()));
+            //when
+            Member savedMember = memberService.signup(member);
+            Member findMember = memberService.findById(savedMember.getId());
+            //then
+            assertThat(member).isEqualTo(findMember);
+            // 같은 Transaction 안에 있어야만 성공한다.
+        }
+
+        @Test
+        @DisplayName("이미 아이디가 존재하면 회원가입을 할 수 없다.")
+        void 회원가입_실패() {
+            //given
+            Member member = Member.builder()
+                    .email("yhwjd@naver.com")
+                    .username("yhwjd")
+                    .password("1234")
+                    .posts(null)
+                    .localDateTime(LocalDateTime.now())
+                    .address(null)
+                    .build();
+            //when
+
+            //then
         }
     }
 

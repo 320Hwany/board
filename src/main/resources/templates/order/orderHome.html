@@ -6,8 +6,8 @@
 </head>
 <body>
     <h2>주문 페이지입니다.</h2>
-    <h2 th:if="${param.isPresentOrder}" th:text="'주문하신 상품이 없습니다.'"></h2>
-    <h2 th:if="${param.orderFail}" th:text="'잔액이 부족합니다.'"></h2>
+    <h2 th:if="${param.noOrderError}" th:text="#{noOrderError}"></h2>
+    <h2 th:if="${param.lackMoneyError}" th:text="#{lackMoneyError}"></h2>
 
     <p th:unless="${param.isPresentOrder}" th:text="|주문 고객 : ${member.getUsername()}|"></p>
 

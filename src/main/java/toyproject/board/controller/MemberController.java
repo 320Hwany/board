@@ -43,17 +43,17 @@ public class MemberController {
         Member member = memberService.getMemberBySignupDto(memberSignupDto);
 
         if (member.getAddress() == null) {
-            bindingResult.reject("addressError", new Object[]{}, null);
+            bindingResult.reject("GlobalAddressError", new Object[]{}, null);
             return "member/signup";
         }
         Optional<Member> findMember = memberService.findByUsername(memberSignupDto.getUsername());
         if (findMember.isPresent()) {
-            bindingResult.reject("signupError", new Object[]{}, null);
+            bindingResult.reject("GlobalSignupError", new Object[]{}, null);
             return "member/signup";
         }
 
         memberService.signup(member);
-        redirectAttributes.addAttribute("status", true);
+        redirectAttributes.addAttribute("statusLoginSuccess", true);
 
         return "redirect:/";
     }
@@ -82,7 +82,7 @@ public class MemberController {
             }
         }
         // validation 을 만족하지만 존재하지 않는 아이디
-        bindingResult.reject("loginError", new Object[]{}, null);
+        bindingResult.reject("GlobalLoginError", new Object[]{}, null);
         return "/member/login";
     }
 
@@ -123,7 +123,7 @@ public class MemberController {
         // String == 비교 말고 equals 사용해야함. String 은 불변 객체
 
         if (memberService.passwordCheckForDelete(memberDeleteDto, member)) {
-            redirectAttributes.addAttribute("statusDeleteMember", true);
+            redirectAttributes.addAttribute("DeleteMember", true);
             memberService.deleteMember(member);
             if (session != null) {
                 session.invalidate();
@@ -160,7 +160,7 @@ public class MemberController {
         }
         member.updateMember(memberUpdateDto.getUsername(), memberUpdateDto.getPassword());
         memberService.signup(member);
-        redirectAttributes.addAttribute("statusUpdateMember", true);
+        redirectAttributes.addAttribute("UpdateMember", true);
 
         memberService.sessionInvalidate(request);
 
