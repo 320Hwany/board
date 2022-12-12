@@ -57,11 +57,8 @@ public class ItemController {
         // storageItem 은 단일 테이블 전략, Item 은 조인 전략으로 만들어보자
         Item item = itemService.makeItemByStorage(storageItem, quantity);
         Member member = memberService.findById(loginMember.getId());
-        Order order = new Order();
-        order.changeOrder(member);
-
-        OrderItems orderItems = new OrderItems();
-        orderItems.changeOrderAndItem(order, item);
+        Order order = Order.createOrder(member);
+        OrderItems.createOrderItems(order, item);
 
         orderService.save(order);
 //        itemService.save(item);

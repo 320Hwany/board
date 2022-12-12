@@ -1,5 +1,6 @@
 package toyproject.board.domain.order;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Entity
 @Table(name = "Orders")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,5 +39,11 @@ public class Order {
     public void changeOrder(Member member) {
         this.member = member;
         member.getOrders().add(this);
+    }
+
+    public static Order createOrder(Member member) {
+        Order order = new Order();
+        order.changeOrder(member);
+        return order;
     }
 }

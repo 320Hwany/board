@@ -47,14 +47,7 @@ class MemberServiceTest {
         @DisplayName("이미 아이디가 존재하면 회원가입을 할 수 없다.")
         void 회원가입_실패() {
             //given
-            Member member = Member.builder()
-                    .email("yhwjd@naver.com")
-                    .username("yhwjd")
-                    .password("1234")
-                    .posts(null)
-                    .localDateTime(LocalDateTime.now())
-                    .address(null)
-                    .build();
+
             //when
 
             //then

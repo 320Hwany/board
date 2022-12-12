@@ -38,4 +38,8 @@ public class Item {
         this.price = price;
         this.quantity = quantity;
     }
+
+    public int calculatePrice() {
+        return price * quantity;
+    }
 }

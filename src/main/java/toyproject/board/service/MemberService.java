@@ -19,8 +19,8 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 @Service
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;

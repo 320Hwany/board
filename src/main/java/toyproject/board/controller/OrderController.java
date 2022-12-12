@@ -37,9 +37,8 @@ public class OrderController {
         List<OrderItems> orderItemsForMember =
                 orderItemsService.getOrderItemsListForMember(member, orderItemsList);
 
-        for (OrderItems orderItems : orderItemsForMember) {
-            orderDtoList.put(orderItems.getId(), orderItems);
-        }
+        orderItemsForMember.stream()
+                .forEach(orderItems -> orderDtoList.put(orderItems.getId(), orderItems));
         return orderDtoList;
     }
 
@@ -96,8 +95,6 @@ public class OrderController {
                         @ModelAttribute OrderDto orderDto,
                         RedirectAttributes redirectAttributes) {
 
-        log.info("orderDto.size={}", orderDto.getOrderItemsList().size());
-
         Member member = memberService.findById(loginMember.getId());
         List<OrderItems> orderItemsList = orderDto.getOrderItemsList();
 
@@ -105,9 +102,7 @@ public class OrderController {
         if (member.getMoney() >= price) {
             member.calculateMoney(member.getMoney() - price);
             List<Order> orders = orderItemsService.findOrdersByOrderDtoList(orderItemsList);
-            for (Order order : orders) {
-                orderService.deleteOrder(order);
-            }
+            orders.stream().forEach(order -> orderService.deleteOrder(order));
         } else if (member.getMoney() < price) {
             redirectAttributes.addAttribute("lackMoneyError", true);
             return "redirect:/order";

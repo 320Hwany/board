@@ -1,5 +1,6 @@
 package toyproject.board.domain.item;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 생성 메소드를 만들어서 protected 로 유지할 수 있다
 @Getter
 public class OrderItems {
 
@@ -36,5 +37,11 @@ public class OrderItems {
         this.order = order;
         order.getOrderItems().add(this);
         this.item = item;
+    }
+
+    public static OrderItems createOrderItems(Order order, Item item) {
+        OrderItems orderItems = new OrderItems();
+        orderItems.changeOrderAndItem(order, item);
+        return orderItems;
     }
 }

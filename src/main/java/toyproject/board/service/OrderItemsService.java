@@ -3,11 +3,11 @@ package toyproject.board.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import toyproject.board.domain.item.Item;
 import toyproject.board.domain.member.Member;
 import toyproject.board.domain.item.OrderItems;
 import toyproject.board.domain.order.Order;
-import toyproject.board.dto.order.OrderDto;
 import toyproject.board.repository.OrderItemsRepository;
 
 import java.util.ArrayList;
@@ -16,11 +16,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class OrderItemsService {
 
     private final OrderItemsRepository orderItemsRepository;
     private final ItemService itemService;
 
+    @Transactional
     public void save(OrderItems orderItems) {
         orderItemsRepository.save(orderItems);
     }
@@ -31,30 +33,25 @@ public class OrderItemsService {
 
     public List<OrderItems> getOrderItemsListForMember(Member member, List<OrderItems> orderItemsList) {
         List<OrderItems> orderItemsForMember = new ArrayList<>();
-        for (OrderItems orderItems : orderItemsList) {
-            if (orderItems.getOrder().getMember() == member) {
-                orderItemsForMember.add(orderItems);
-            }
-        }
+
+        orderItemsList.stream()
+                .filter(orderItems -> orderItems.getOrder().getMember() == member)
+                .forEach(orderItems -> orderItemsForMember.add(orderItems));
+
         return orderItemsForMember;
     }
 
     public int calculateForPay(List<OrderItems> orderItemsList) {
-        int price = 0;
-        for (OrderItems orderItems : orderItemsList) {
-            Item item = orderItems.getItem();
-            price += item.getPrice() * item.getQuantity();
-        }
-        return price;
+        return orderItemsList.stream().map(OrderItems::getItem)
+                .mapToInt(Item::calculatePrice)
+                .sum();
     }
 
     public List<Order> findOrdersByOrderDtoList(List<OrderItems> orderItemsList) {
         List<Order> orders = new ArrayList<>();
+        orderItemsList.stream()
+                .forEach(orderItems -> orders.add(orderItems.getOrder()));
 
-        for (OrderItems orderItem : orderItemsList) {
-            Order order = orderItem.getOrder();
-            orders.add(order);
-        }
         return orders;
     }
 }
