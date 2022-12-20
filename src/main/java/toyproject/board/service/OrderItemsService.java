@@ -20,7 +20,6 @@ import java.util.List;
 public class OrderItemsService {
 
     private final OrderItemsRepository orderItemsRepository;
-    private final ItemService itemService;
 
     @Transactional
     public void save(OrderItems orderItems) {

@@ -1,8 +1,6 @@
 package toyproject.board.dto.member;
 
-import lombok.Getter;
-import lombok.Setter;
-import toyproject.board.domain.embeddable.Address;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

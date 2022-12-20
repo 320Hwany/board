@@ -24,7 +24,6 @@ import java.util.Optional;
 public class MemberController {
 
     private final MemberService memberService;
-
     @GetMapping("/signup")
     public String signup(Model model) {
         model.addAttribute("memberSignupDto", new MemberSignupDto());
@@ -159,7 +158,6 @@ public class MemberController {
             return "member/updateMember";
         }
         member.updateMember(memberUpdateDto.getUsername(), memberUpdateDto.getPassword());
-        memberService.signup(member);
         redirectAttributes.addAttribute("UpdateMember", true);
 
         memberService.sessionInvalidate(request);
