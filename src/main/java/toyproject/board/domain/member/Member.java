@@ -2,6 +2,7 @@ package toyproject.board.domain.member;
 
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import toyproject.board.domain.BaseTimeEntity;
 import toyproject.board.domain.embeddable.Address;
 import toyproject.board.domain.order.Order;
 import toyproject.board.domain.post.Post;
@@ -15,7 +16,7 @@ import java.util.List;
 // JPA 가 내부에서 동적으로 객체를 생성하기 때문에 기본생성자가 필요하다.
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")

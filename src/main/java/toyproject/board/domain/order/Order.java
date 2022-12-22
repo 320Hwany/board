@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toyproject.board.domain.BaseTimeEntity;
 import toyproject.board.domain.item.OrderItems;
 import toyproject.board.domain.member.Member;
 
@@ -18,7 +19,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Table(name = "Orders")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order {
+public class Order extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")

@@ -1,10 +1,7 @@
 package toyproject.board.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import toyproject.board.domain.member.Member;
 import toyproject.board.dto.member.MemberLoginDto;
 import toyproject.board.dto.member.MemberSignupDto;
@@ -29,10 +26,10 @@ public class MemberApiController {
     }
 
     @PostMapping("/login")
-    public Member login(@RequestBody @Valid MemberLoginDto memberLoginDto,
+    public MemberLoginDto login(@RequestBody @Valid MemberLoginDto memberLoginDto,
                         HttpServletRequest request) {
         Member member = memberService.findByUsername(memberLoginDto.getUsername()).get();
         memberService.makeSessionForLogin(request, member);
-        return member;
+        return memberLoginDto;
     }
 }
