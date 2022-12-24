@@ -11,6 +11,7 @@ import toyproject.board.domain.item.OrderItems;
 import toyproject.board.domain.item.StorageItem;
 import toyproject.board.domain.member.Member;
 import toyproject.board.domain.order.Order;
+import toyproject.board.dto.member.MemberLoginDto;
 import toyproject.board.service.*;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public class ItemController {
 
     @PostMapping("/itemList/{id}")
     public String AddInBasket(@PathVariable Long id,
-                              @SessionAttribute(name = "loginMember", required = false) Member loginMember,
+                              @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
                               @RequestParam int quantity,
                               RedirectAttributes redirectAttributes) {
 
@@ -56,7 +57,7 @@ public class ItemController {
 
         // storageItem 은 단일 테이블 전략, Item 은 조인 전략으로 만들어보자
         Item item = itemService.makeItemByStorage(storageItem, quantity);
-        Member member = memberService.findById(loginMember.getId());
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         Order order = Order.createOrder(member);
         OrderItems.createOrderItems(order, item);
 

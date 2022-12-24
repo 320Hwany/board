@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import toyproject.board.domain.member.Member;
+import toyproject.board.dto.member.MemberLoginDto;
 import toyproject.board.service.MemberService;
 
 @RequiredArgsConstructor
@@ -16,10 +17,11 @@ public class HomeController {
 
     @GetMapping("/")
     public String index(
-            @SessionAttribute(name = "loginMember", required = false) Member loginMember, Model model) {
+            @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember, Model model) {
 
         if (loginMember != null) {
-            model.addAttribute("member", loginMember);
+            Member member = memberService.findByUsername(loginMember.getUsername()).get();
+            model.addAttribute("member", member);
             return "redirect:/home";
         }
         return "index";

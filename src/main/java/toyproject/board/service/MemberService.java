@@ -67,7 +67,7 @@ public class MemberService {
         return findMember.getPassword().equals(memberLoginDto.getPassword());
     }
 
-    public void makeSessionForLogin(HttpServletRequest request, Member findMember) {
+    public void makeSessionForLogin(HttpServletRequest request, MemberLoginDto findMember) {
         HttpSession session = request.getSession();
         session.setAttribute("loginMember", findMember);
     }

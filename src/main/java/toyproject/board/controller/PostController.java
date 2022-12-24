@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.member.Member;
 import toyproject.board.domain.post.Post;
+import toyproject.board.dto.member.MemberLoginDto;
 import toyproject.board.dto.post.PostSaveDto;
 import toyproject.board.service.MemberService;
 import toyproject.board.service.PostService;
@@ -22,6 +23,7 @@ import java.util.List;
 @Slf4j
 public class PostController {
     private final PostService postService;
+    private final MemberService memberService;
 
     @GetMapping("/registration")
     public String registrationForm(
@@ -35,10 +37,11 @@ public class PostController {
 
     // th:field 를 사용하여 valid 조건에 맞지 않을 때 원래 값 그대로 보존할 수 있다.
     @PostMapping("/registration")
-    public String registration(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-                               @Valid @ModelAttribute PostSaveDto postSaveDto,
-                               BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes) {
+    public String registration(
+            @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
+            @Valid @ModelAttribute PostSaveDto postSaveDto,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             return "/post/registration";
@@ -87,8 +90,9 @@ public class PostController {
     }
 
     @PostMapping("/postHome/{id}/deletePost")
-    public String deletePost(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-                             @PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deletePost(
+            @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
+            @PathVariable Long id, RedirectAttributes redirectAttributes) {
 
         postService.deletePost(loginMember, id);
         redirectAttributes.addAttribute("postDelete", true);

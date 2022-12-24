@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toyproject.board.domain.member.Member;
 import toyproject.board.domain.item.OrderItems;
 import toyproject.board.domain.order.Order;
+import toyproject.board.dto.member.MemberLoginDto;
 import toyproject.board.dto.member.MemberRechargeDto;
 import toyproject.board.dto.order.OrderDto;
 import toyproject.board.service.MemberService;
@@ -30,8 +31,9 @@ public class OrderController {
 
     @ModelAttribute("orderDtoList")
     public Map<Long, OrderItems> orderDto(
-            @SessionAttribute(name = "loginMember", required = false) Member loginMember) {
-        Member member = memberService.findById(loginMember.getId());
+            @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember) {
+
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         Map<Long, OrderItems> orderDtoList = new LinkedHashMap<>();
         List<OrderItems> orderItemsList = orderItemsService.findAll();
         List<OrderItems> orderItemsForMember =
@@ -50,12 +52,12 @@ public class OrderController {
     }
 
     @PostMapping("/recharge")
-    public String recharge(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+    public String recharge(@SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
                            @Valid @ModelAttribute MemberRechargeDto memberRechargeDto,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) {
 
-        Member member = memberService.findById(loginMember.getId());
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
 
         if (bindingResult.hasErrors()) {
             return "recharge/rechargeForm";
@@ -72,10 +74,10 @@ public class OrderController {
     }
 
     @GetMapping("/order")
-    public String orderForm(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+    public String orderForm(@SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
                             Model model, RedirectAttributes redirectAttributes) {
 
-        Member member = memberService.findById(loginMember.getId());
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
 
         List<OrderItems> orderItemsList = orderItemsService.findAll();
         model.addAttribute("member", member);
@@ -91,11 +93,11 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    public String order(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
+    public String order(@SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
                         @ModelAttribute OrderDto orderDto,
                         RedirectAttributes redirectAttributes) {
 
-        Member member = memberService.findById(loginMember.getId());
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         List<OrderItems> orderItemsList = orderDto.getOrderItemsList();
 
         int price = orderItemsService.calculateForPay(orderItemsList);

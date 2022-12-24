@@ -76,7 +76,7 @@ public class MemberController {
         if (findMemberOptional.isPresent()) {
             Member findMember = findMemberOptional.get();
             if (memberService.checkPasswordForLogin(memberLoginDto, findMember)) {
-                memberService.makeSessionForLogin(request, findMember);
+                memberService.makeSessionForLogin(request, memberLoginDto);
                 return "redirect:" + redirectURL;
             }
         }
@@ -87,13 +87,14 @@ public class MemberController {
 
     @GetMapping("/home")
     public String home(
-            @SessionAttribute(name = "loginMember", required = false) Member loginMember, Model model) {
+            @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
+            Model model) {
         // 동시 접속시 세션 문제?
         if (loginMember == null) {
             return "redirect:/";
         }
 
-        Member member = memberService.findById(loginMember.getId());
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         List<Post> posts = member.getPosts();
         model.addAttribute("member", member);
         model.addAttribute("posts", posts);
@@ -101,25 +102,26 @@ public class MemberController {
     }
 
     @GetMapping("/deleteMember")
-    public String deleteForm(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-                             Model model) {
+    public String deleteForm(
+            @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
+            Model model) {
 
-        Member member = memberService.findById(loginMember.getId());
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         model.addAttribute("member", member);
         model.addAttribute("memberDeleteDto", new MemberDeleteDto());
         return "member/deleteMember";
     }
 
     @PostMapping("/deleteMember") // form method post 설정안함
-    public String deleteMember(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-                               @ModelAttribute MemberDeleteDto memberDeleteDto,
-                               BindingResult bindingResult,
-                               HttpServletRequest request,
-                               RedirectAttributes redirectAttributes) {
+    public String deleteMember(
+            @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
+            @ModelAttribute MemberDeleteDto memberDeleteDto,
+            BindingResult bindingResult,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
 
         HttpSession session = request.getSession(false);
-        Member member = memberService.findById(loginMember.getId());
-        // String == 비교 말고 equals 사용해야함. String 은 불변 객체
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
 
         if (memberService.passwordCheckForDelete(memberDeleteDto, member)) {
             redirectAttributes.addAttribute("DeleteMember", true);
@@ -135,23 +137,26 @@ public class MemberController {
     }
 
     @GetMapping("/updateMember")
-    public String updateMember(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-                               Model model) {
-        Member member = memberService.findById(loginMember.getId());
+    public String updateMember(
+            @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
+            Model model) {
+
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
         model.addAttribute("member", member);
         model.addAttribute("memberUpdateDto", new MemberUpdateDto());
         return "member/updateMember";
     }
 
     @PostMapping("/updateMember")
-    public String updateMember(@SessionAttribute(name = "loginMember", required = false) Member loginMember,
-                               @Valid @ModelAttribute MemberUpdateDto memberUpdateDto,
-                               BindingResult bindingResult,
-                               HttpServletRequest request,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
+    public String updateMember(
+            @SessionAttribute(name = "loginMember", required = false) MemberLoginDto loginMember,
+            @Valid @ModelAttribute MemberUpdateDto memberUpdateDto,
+            BindingResult bindingResult,
+            HttpServletRequest request,
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
-        Member member = memberService.findById(loginMember.getId());
+        Member member = memberService.findByUsername(loginMember.getUsername()).get();
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("member", member);
