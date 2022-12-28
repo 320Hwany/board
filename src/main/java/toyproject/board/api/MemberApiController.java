@@ -28,7 +28,7 @@ public class MemberApiController {
     @PostMapping("/login")
     public MemberLoginDto login(@RequestBody @Valid MemberLoginDto memberLoginDto,
                         HttpServletRequest request) {
-        memberService.makeSessionForLogin(request, memberLoginDto);
+        Member.makeSessionForLogin(request, memberLoginDto);
         return memberLoginDto;
     }
 }

@@ -64,7 +64,7 @@ public class OrderController {
         }
 
         if (orderService.passwordCheckForRecharge(memberRechargeDto, member)) {
-            memberService.recharge(member, memberRechargeDto);
+            member.recharge(memberRechargeDto);
             redirectAttributes.addAttribute("Recharge", true);
             return "redirect:/home";
         }

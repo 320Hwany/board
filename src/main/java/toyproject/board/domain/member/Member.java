@@ -6,8 +6,13 @@ import toyproject.board.domain.BaseTimeEntity;
 import toyproject.board.domain.embeddable.Address;
 import toyproject.board.domain.order.Order;
 import toyproject.board.domain.post.Post;
+import toyproject.board.dto.member.MemberDeleteDto;
+import toyproject.board.dto.member.MemberLoginDto;
+import toyproject.board.dto.member.MemberRechargeDto;
 
 import javax.persistence.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,5 +69,30 @@ public class Member extends BaseTimeEntity {
 
     public void calculateMoney(int money) {
         this.money = money;
+    }
+
+    public void recharge(MemberRechargeDto memberRechargeDto) {
+        this.calculateMoney(this.getMoney() + memberRechargeDto.getMoney());
+    }
+
+    public boolean checkPasswordForLogin(MemberLoginDto memberLoginDto) {
+        return this.getPassword().equals(memberLoginDto.getPassword());
+    }
+
+    public boolean passwordCheckForDelete(MemberDeleteDto memberDeleteDto) {
+        return this.getPassword().equals(memberDeleteDto.getPassword()) &&
+                this.getPassword().equals(memberDeleteDto.getPasswordCheck());
+    }
+
+    public static void makeSessionForLogin(HttpServletRequest request, MemberLoginDto findMember) {
+        HttpSession session = request.getSession();
+        session.setAttribute("loginMember", findMember);
+    }
+
+    public static void sessionInvalidate(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
     }
 }

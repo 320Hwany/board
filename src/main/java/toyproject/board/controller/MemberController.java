@@ -75,8 +75,8 @@ public class MemberController {
         Optional<Member> findMemberOptional = memberService.findByUsername(memberLoginDto.getUsername());
         if (findMemberOptional.isPresent()) {
             Member findMember = findMemberOptional.get();
-            if (memberService.checkPasswordForLogin(memberLoginDto, findMember)) {
-                memberService.makeSessionForLogin(request, memberLoginDto);
+            if (findMember.checkPasswordForLogin(memberLoginDto)) {
+                Member.makeSessionForLogin(request, memberLoginDto);
                 return "redirect:" + redirectURL;
             }
         }
@@ -123,7 +123,7 @@ public class MemberController {
         HttpSession session = request.getSession(false);
         Member member = memberService.findByUsername(loginMember.getUsername()).get();
 
-        if (memberService.passwordCheckForDelete(memberDeleteDto, member)) {
+        if (member.passwordCheckForDelete(memberDeleteDto)) {
             redirectAttributes.addAttribute("DeleteMember", true);
             memberService.deleteMember(member);
             if (session != null) {
@@ -165,14 +165,14 @@ public class MemberController {
         member.updateMember(memberUpdateDto.getUsername(), memberUpdateDto.getPassword());
         redirectAttributes.addAttribute("UpdateMember", true);
 
-        memberService.sessionInvalidate(request);
+        Member.sessionInvalidate(request);
 
         return "redirect:/";
     }
 
     @GetMapping("/logout")
     public String logoutForm(HttpServletRequest request) {
-        memberService.sessionInvalidate(request);
+        Member.sessionInvalidate(request);
         return "redirect:/";
     }
 }

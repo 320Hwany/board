@@ -44,10 +44,6 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-    public void recharge(Member member, MemberRechargeDto memberRechargeDto) {
-        member.calculateMoney(member.getMoney() + memberRechargeDto.getMoney());
-    }
-
     public Member getMemberBySignupDto(MemberSignupDto memberSignupDto) {
 
         Address address = makeAddressFromMemberSignupDto(memberSignupDto);
@@ -61,27 +57,6 @@ public class MemberService {
                 .build();
 
         return member;
-    }
-
-    public boolean checkPasswordForLogin(MemberLoginDto memberLoginDto, Member findMember) {
-        return findMember.getPassword().equals(memberLoginDto.getPassword());
-    }
-
-    public void makeSessionForLogin(HttpServletRequest request, MemberLoginDto findMember) {
-        HttpSession session = request.getSession();
-        session.setAttribute("loginMember", findMember);
-    }
-
-    public boolean passwordCheckForDelete(MemberDeleteDto memberDeleteDto, Member member) {
-        return member.getPassword().equals(memberDeleteDto.getPassword()) &&
-                member.getPassword().equals(memberDeleteDto.getPasswordCheck());
-    }
-
-    public void sessionInvalidate(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
     }
 
     public Address makeAddressFromMemberSignupDto(MemberSignupDto memberSignupDto) {

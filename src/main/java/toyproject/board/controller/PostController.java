@@ -23,7 +23,6 @@ import java.util.List;
 @Slf4j
 public class PostController {
     private final PostService postService;
-    private final MemberService memberService;
 
     @GetMapping("/registration")
     public String registrationForm(
